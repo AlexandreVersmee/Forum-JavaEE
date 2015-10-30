@@ -5,10 +5,8 @@
 			<div class="large-12 large-centered columns">
 				<div class="large-6 columns">
 					<ul class="inline-list">
-						<li><a href="#">Link 1</a></li>
-						<li><a href="#">Link 2</a></li>
-						<li><a href="#">Link 3</a></li>
-						<li><a href="#">Link 4</a></li>
+						<li><a href="#">Contact</a></li>
+						<li><a href="#">Mentions légales</a></li>
 					</ul>
 				</div>
 			</div>
