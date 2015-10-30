@@ -13,7 +13,12 @@
            http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd" 
            default-lazy-init="true">
 
-
+	<!-- Taduction -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
 
 	<bean id="DBPropertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
