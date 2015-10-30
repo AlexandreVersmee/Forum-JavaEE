@@ -1,0 +1,56 @@
+package main;
+
+import com.orange.OSAC.configurationFile.ConfigProperties;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+public class mainFunction {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+//		System.out.println("Fin update Database");
+//		
+//		System.out.println("Encodage : "+System.getProperty("file.encoding"));
+		
+		try {
+//			ConfigProperties properties = new ConfigProperties();
+//
+//			properties.setPropertieValueLdap("coucou");
+//
+//			FileInputStream in = new FileInputStream("src/main/resources/configuration.properties");
+//			Properties props = new Properties();
+//			props.load(in);
+//			in.close();
+
+			Properties props = new Properties();
+			FileOutputStream out = new FileOutputStream("src/main/resources/configuration.properties");
+			props.setProperty("ldap_url", "retesdfgdfgdfgdfgt");
+			props.store(out, null);
+			out.close();
+			 
+			System.out.println("Config Property Successfully Updated..");
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+//ClientService clientService = applicationContext.getBean(ClientService.class);

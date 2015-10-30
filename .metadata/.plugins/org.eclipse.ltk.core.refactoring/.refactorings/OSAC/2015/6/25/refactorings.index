@@ -1,0 +1,12 @@
+1434358408709	Delete element
+1434358411659	Delete element
+1434372533816	Move 'identificationManager.wsdl' to 'wsdl'
+1434372803999	Rename resource 'IdentificationManager2'
+1434531866444	Rename compilation unit 'ApplicationService.java'
+1434613108911	Rename compilation unit 'ApplicationService.java'
+1434616992084	Move compilation unit
+1434617358611	Move compilation unit
+1434701584801	Encapsulate field 'idApplication'
+1434703881463	Move compilation unit
+1434703887811	Rename type 'UserService'
+1434704007269	Rename type 'ApplicationServiceImpl'

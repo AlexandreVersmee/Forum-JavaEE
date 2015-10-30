@@ -1,0 +1,84 @@
+package com.orange.OSAC.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.orange.OSAC.entities.User;
+import com.orange.OSAC.services.IUserService;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+@Controller
+@RequestMapping(value = "/connexion") 
+public class LoginController
+{
+	/* Debug */
+	private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
+	
+	@Resource
+	IUserService 			userService;
+	
+	/*
+	###############################
+	#                             #
+	#            GET              #
+	#                             #
+	###############################
+	*/
+     @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView login(ModelMap model, HttpServletRequest request)
+	{
+		/* Var print data rescued from research */
+		model.addAttribute("user", new User());	
+		model.addAttribute("ERROR_MESSAGE", request.getAttribute("ERROR_MESSAGE"));
+    	
+        return new ModelAndView("login");
+    }
+    
+	/*
+	###############################
+	#                             #
+	#            POST             #
+	#                             #
+	###############################
+	*/
+    @RequestMapping(method = RequestMethod.POST)
+	public String logUser(@Valid @ModelAttribute(value = "user") User userTemp,
+			BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+    	/* Seek user on database */
+    	User userTocheck = userService.findByCuid(userTemp.getCuid());
+    	
+    	logger.debug("User trying to connect with this information : [{}, {}])",userTemp.getCuid(),userTemp.getPassword());
+    	
+    	logger.debug("User trying to connect with this information : [{}, {}])",userTocheck.getCuid(),userTocheck.getPassword());
+    	
+    	/* check if CUID and Password are correct */
+    	if (userTemp.getCuid().equals(userTocheck.getCuid()) && userTemp.getPassword().equals(userTocheck.getPassword()))
+    	{
+    		
+    		redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Connexion réussi, Bonjour "+userTocheck.getFirstName());
+    		
+    		logger.debug("Ajout de l'utilisateur en Session");
+    		session.setAttribute("userSession", userTocheck);
+    		
+    		return ("redirect:/");
+    	}
+    	else
+    	{
+    		model.addAttribute("ERROR_MESSAGE","Le couple CUID et mot de passe est incorrect.");
+    		return ("login");
+    	}
+	}
+}

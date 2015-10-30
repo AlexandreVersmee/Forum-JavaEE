@@ -1,0 +1,29 @@
+package com.orange.OSAC.dao;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.orange.OSAC.entities.TypeTicket;
+
+public interface TypeTicketDAO extends JpaRepository<TypeTicket, Long>
+{
+    /*
+    ###############################
+    #                             #
+    #       Default method        #
+    #    (delete, save, FindAll,  #
+    #      getOne, flush, ...)    #
+    #                             #
+    ###############################
+    */
+	public TypeTicket findById(Long typeTicketId);
+	
+	public Page<TypeTicket> findAll(Pageable pageable);
+
+	public List<TypeTicket> findByDeletedDateIsNull();
+	
+	public Page<TypeTicket> findByDeletedDateIsNull(Pageable pageable);
+}

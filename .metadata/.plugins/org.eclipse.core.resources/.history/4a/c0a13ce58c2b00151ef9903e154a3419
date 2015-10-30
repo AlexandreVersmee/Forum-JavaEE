@@ -1,0 +1,31 @@
+package com.orange.OSAC.dao;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.orange.OSAC.entities.Origine;
+
+public interface OrigineDAO extends JpaRepository<Origine, Long>
+{
+    /*
+    ###############################
+    #                             #
+    #       Default method        #
+    #    (delete, save, FindAll,  #
+    #      getOne, flush, ...)    #
+    #                             #
+    ###############################
+    */
+	public Origine findById(Long origineId);
+	
+	public Page<Origine> findAll();
+	
+	public Page<Origine> findAll(Pageable pageable);
+
+	public List<Origine> findByDeletedIsNull();
+	
+	public Page<Origine> findByDeletedIsNull(Pageable pageable);
+}

@@ -1,0 +1,46 @@
+package com.orange.OSAC.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+public class defaultInterceptor implements HandlerInterceptor
+{
+	/* Debug */
+	private final static Logger logger = LoggerFactory.getLogger(defaultInterceptor.class);
+	
+	@Override
+    public boolean preHandle(HttpServletRequest request,
+            HttpServletResponse response, Object handler) throws Exception {
+         
+        System.out.println("Pre-handle");
+		if (request.getSession().getAttribute("userSession") == null)
+		{
+			logger.debug("User not login -> no UserSession");
+			request.setAttribute("ERROR_MESSAGE","Vous devez vous connecter avant de pouvoir utiliser l'application OSAC.");
+			response.sendRedirect("connexion");
+			return false;
+		}
+        return true;
+    }
+     
+    @Override
+    public void postHandle(HttpServletRequest request,
+            HttpServletResponse response, Object handler,
+            ModelAndView modelAndView) throws Exception {
+        System.out.println("Post-handle");
+
+    }
+     
+    @Override
+    public void afterCompletion(HttpServletRequest request,
+            HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
+        System.out.println("After completion handle");
+    }
+}

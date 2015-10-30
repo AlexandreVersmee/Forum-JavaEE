@@ -1,0 +1,38 @@
+<%@ taglib prefix="body" tagdir="/WEB-INF/tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="control" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<div class="row">
+	<div class="large-12 columns nav-bar">
+		<nav class="top-bar" data-topbar>
+			<ul class="title-area">
+				<li class="name">
+					<h1><a href="#"></a></h1>
+				</li>
+				<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a>
+				</li>
+			</ul>
+			<section class="top-bar-section nav-bar-link">
+				<ul class="left">
+					<li><a href="/OSAC/home"><i class="fa fa-home"></i></a></li>
+					<li><a href="/OSAC/statistique"><i class="fa fa-bar-chart"></i>Statistiques</a></li>
+					<li><a href="/OSAC/parametre"><i class="fa fa-cogs"></i>Paramètres</a></li>
+					<control:if test="${userSession.userType.name == 'Administrateur'}">
+						<li><a href="/OSAC/administration"><i class="fa fa-tachometer"></i>Administration</a></li>
+					</control:if>
+				</ul>
+				<ul class="right">
+						<li><form:form method="POST" action="/OSAC/logout">
+						<button type="submit" class="no-btn">
+						
+						
+									<i class="fa fa-sign-out"></i>		<a>Déconnexion</a>
+								
+							
+						</button>
+					</form:form>
+					</li>
+				</ul>
+			</section>
+		</nav>
+	</div>
+</div>

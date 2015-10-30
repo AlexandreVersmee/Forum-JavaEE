@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - osac@localhost" uuid="23a744ad-5faf-4cb1-9d2a-e1eb51a81a52">
+    <database-info product="MySQL" version="5.6.17" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.34 ( Revision: jess.balint@oracle.com-20141014163213-wqbwpf1ok2kvo1om )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="osac"/>
+    <table name="application" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="date_suppresion" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="nom" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="code_basicat" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK954D572C443883E2" table="ticket" schema="" catalog="osac" columns="application_id"/>
+      <exported-key name="FKDD16338397FDE2A1" table="utilisateur" schema="" catalog="osac" columns="applicationDefault_id"/>
+    </table>
+    <table name="origine" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="deleted" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6"/>
+      <column name="nom" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK954D572C84FA6582" table="ticket" schema="" catalog="osac" columns="origine_id"/>
+    </table>
+    <table name="piece_jointe" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="deleted" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6"/>
+      <column name="nom_piece_jointe" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="chemin_acces_document" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK954D572C445BEE52" table="ticket" schema="" catalog="osac" columns="attachedDocument_id"/>
+    </table>
+    <table name="sous_type_ticket" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="deleted" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6"/>
+      <column name="nom" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK954D572CA3914EB1" table="ticket" schema="" catalog="osac" columns="sourceUnderType_id"/>
+      <exported-key name="FKB8047BAF04F7022" table="type_ticket_sous_type_ticket" schema="" catalog="osac" columns="TicketUnderType_id"/>
+    </table>
+    <table name="statut_ticket" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="deleted" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6"/>
+      <column name="nom" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK954D572CA0645A52" table="ticket" schema="" catalog="osac" columns="ticketStatut_id"/>
+    </table>
+    <table name="ticket" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="date_derniere_modification" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="date_fermeture" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="date_creation" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
+      <column name="date_suppression" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="titre" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="application_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="attachedDocument_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="origine_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="sourceType_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="sourceUnderType_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="ticketStatut_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="user_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK954D572C445BEE52" columns="attachedDocument_id" ref-table="piece_jointe" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK954D572C443883E2" columns="application_id" ref-table="application" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK954D572C84FA6582" columns="origine_id" ref-table="origine" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK954D572CA0645A52" columns="ticketStatut_id" ref-table="statut_ticket" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK954D572CA3914EB1" columns="sourceUnderType_id" ref-table="sous_type_ticket" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK954D572CA789E2B2" columns="user_id" ref-table="utilisateur" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK954D572CFE514303" columns="sourceType_id" ref-table="type_ticket" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK954D572C443883E2" unique="false" columns="application_id"/>
+      <index name="FK954D572C445BEE52" unique="false" columns="attachedDocument_id"/>
+      <index name="FK954D572C84FA6582" unique="false" columns="origine_id"/>
+      <index name="FK954D572CA0645A52" unique="false" columns="ticketStatut_id"/>
+      <index name="FK954D572CA3914EB1" unique="false" columns="sourceUnderType_id"/>
+      <index name="FK954D572CA789E2B2" unique="false" columns="user_id"/>
+      <index name="FK954D572CFE514303" unique="false" columns="sourceType_id"/>
+    </table>
+    <table name="type_ticket" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="deleted" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6"/>
+      <column name="nom" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK954D572CFE514303" table="ticket" schema="" catalog="osac" columns="sourceType_id"/>
+      <exported-key name="FKB8047BA6223F3A7" table="type_ticket_sous_type_ticket" schema="" catalog="osac" columns="type_ticket_id"/>
+    </table>
+    <table name="type_ticket_sous_type_ticket" schema="" catalog="osac" type="TABLE">
+      <column name="type_ticket_id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="TicketUnderType_id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <foreign-key name="FKB8047BA6223F3A7" columns="type_ticket_id" ref-table="type_ticket" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FKB8047BAF04F7022" columns="TicketUnderType_id" ref-table="sous_type_ticket" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FKB8047BA6223F3A7" unique="false" columns="type_ticket_id"/>
+      <index name="FKB8047BAF04F7022" unique="false" columns="TicketUnderType_id"/>
+    </table>
+    <table name="type_utilisateur" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="deleted" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6"/>
+      <column name="nom" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FKDD163383A8C61892" table="utilisateur" schema="" catalog="osac" columns="userType_id"/>
+    </table>
+    <table name="utilisateur" schema="" catalog="osac" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="cuid" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="date_suppression" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="prenom" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="login" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="nom" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="applicationDefault_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="userType_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FKDD163383A8C61892" columns="userType_id" ref-table="type_utilisateur" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FKDD16338397FDE2A1" columns="applicationDefault_id" ref-table="application" ref-schema="" ref-catalog="osac" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK954D572CA789E2B2" table="ticket" schema="" catalog="osac" columns="user_id"/>
+      <index name="FKDD16338397FDE2A1" unique="false" columns="applicationDefault_id"/>
+      <index name="FKDD163383A8C61892" unique="false" columns="userType_id"/>
+    </table>
+  </data-source>
+</component>

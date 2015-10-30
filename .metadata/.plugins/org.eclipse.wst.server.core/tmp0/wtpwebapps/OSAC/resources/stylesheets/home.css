@@ -1,0 +1,21 @@
+/* Welcome sentence */
+/*.btn-search-div,*/
+/* Search bar */
+.btn-search-div > button {
+  height: 37px; }
+
+.btn-search-div > button {
+  padding-top: 8px;
+  padding-bottom: 11px; }
+
+/* Btn add ticket */
+.btn-add-ticket i {
+  vertical-align: middle; }
+
+/* ticket table */
+.ticket-table {
+  width: calc(100% - 20px);
+  margin-right: 10px;
+  margin-left: 10px; }
+
+/*# sourceMappingURL=home.css.map */

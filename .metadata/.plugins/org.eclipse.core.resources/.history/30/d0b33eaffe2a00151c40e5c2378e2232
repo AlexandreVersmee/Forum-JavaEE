@@ -1,0 +1,46 @@
+package com.orange.OSAC.services.implementation;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.orange.OSAC.dao.OrigineDAO;
+import com.orange.OSAC.dao.TicketDAO;
+import com.orange.OSAC.entities.Origine;
+import com.orange.OSAC.services.IOrigineService;
+
+public class OrigineService implements IOrigineService
+{
+	/* Debug */
+	private final static Logger logger = LoggerFactory.getLogger(OrigineService.class);
+
+	@Resource
+	private OrigineDAO	origineDAO;
+
+	
+	public Origine findById(Long origineId){
+		return origineDAO.findById(origineId);
+				
+	}
+	
+	public Page<Origine> findAll(Pageable pageable)
+	{
+		
+		return origineDAO.findAll(pageable);
+	}
+
+	public List<Origine> findByDeletedDateIsNull()
+	{
+		return origineDAO.findByDeletedDateIsNull();
+	}
+	
+	public Page<Origine> findByDeletedDateIsNull(Pageable pageable)
+	{
+		return origineDAO.findByDeletedDateIsNull(pageable);
+	}
+}

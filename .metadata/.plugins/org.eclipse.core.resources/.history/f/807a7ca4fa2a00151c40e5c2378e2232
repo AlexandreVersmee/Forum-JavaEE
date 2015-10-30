@@ -1,0 +1,47 @@
+package com.orange.OSAC.entities;
+
+import javax.persistence.*;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Entity
+@Table(name="type_ticket")
+public class TicketType extends GenericEntity implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+	/*
+		###############################
+		#                             #
+		#         Relation            #
+		#                             #
+		###############################
+	*/
+	@ManyToMany
+	private List<UnderTypeTicket> TicketUnderType;
+	/*
+		###############################
+		#                             #
+		#         Getter              #
+		#                             #
+		###############################
+	*/
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public List<UnderTypeTicket> getTicketUnderType() {
+		return TicketUnderType;
+	}
+	/*
+		###############################
+		#                             #
+		#         Setter              #
+		#                             #
+		###############################
+	*/
+	public void setTicketUnderType(List<UnderTypeTicket> TicketUnderType) {
+		this.TicketUnderType = TicketUnderType;
+	}
+}
+

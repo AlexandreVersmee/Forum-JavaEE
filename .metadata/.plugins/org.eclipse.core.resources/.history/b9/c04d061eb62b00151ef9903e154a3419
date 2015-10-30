@@ -1,0 +1,72 @@
+package com.orange.OSAC.forms;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Preference
+{
+	/*
+	###############################
+	#                             #
+	#         constructor         #
+	#                             #
+	###############################
+	*/
+	public Preference(){
+		this.rowByPage 		= 1;
+		this.displayDeleted = false;
+	}
+	/*
+	###############################
+	#                             #
+	#         Attributs           #
+	#                             #
+	###############################
+	*/
+	int 	rowByPage;
+	boolean	displayDeleted;
+	/*
+	###############################
+	#                             #
+	#         Getter              #
+	#                             #
+	###############################
+	*/
+	public int getRowByPage() {
+		return this.rowByPage;
+	}
+
+	public boolean isDisplayDeleted() {
+		return displayDeleted;
+	}
+	/*
+	###############################
+	#                             #
+	#         Setter              #
+	#                             #
+	###############################
+	*/
+	public void setRowByPage(int rowByPage) {
+		this.rowByPage = rowByPage;
+	}
+
+	public void setDisplayDeleted(boolean displayDeleted) {
+		this.displayDeleted = displayDeleted;
+	}
+	/*
+	###############################
+	#                             #
+	#         Methods             #
+	#                             #
+	###############################
+	*/
+	@Override
+	public String toString()
+	{
+		String message;
+
+		message="Deleted : "+this.isDisplayDeleted()+ 
+				", Number row by page : "+this.getRowByPage();
+		return (message);
+	}
+}

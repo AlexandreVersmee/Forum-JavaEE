@@ -1,0 +1,189 @@
+<wsdl:definitions name="IdentificationManager" targetNamespace="urn:identification.service.ecare/G08R07C00" xmlns:ns1="urn:identification.service.ecare/G08R07C00" xmlns:ns2="urn:exception.ecare" xmlns:ns3="urn:identification.exception.ecare" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <wsdl:types>
+      <xs:schema targetNamespace="urn:identification.service.ecare/G08R07C00" version="1.0" xmlns:ns1="urn:identification.data.ecare" xmlns:tns="urn:identification.service.ecare/G08R07C00" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+         <xs:import namespace="urn:identification.data.ecare"/>
+         <xs:element name="getIdentification" type="tns:getIdentification"/>
+         <xs:element name="getIdentificationResponse" type="tns:getIdentificationResponse"/>
+         <xs:element name="getVersion" type="tns:getVersion"/>
+         <xs:element name="getVersionResponse" type="tns:getVersionResponse"/>
+         <xs:element name="isAlive" type="tns:isAlive"/>
+         <xs:element name="isAliveResponse" type="tns:isAliveResponse"/>
+         <xs:complexType name="getIdentification">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="codeEmetteur" type="xs:string"/>
+               <xs:element minOccurs="0" name="msisdn" type="xs:string"/>
+               <xs:element minOccurs="0" name="numNsce" type="xs:string"/>
+               <xs:element minOccurs="0" name="mode" type="xs:string"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="getIdentificationResponse">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="return" type="ns1:identification"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="getVersion">
+            <xs:sequence/>
+         </xs:complexType>
+         <xs:complexType name="getVersionResponse">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="return" type="xs:string"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="isAlive">
+            <xs:sequence/>
+         </xs:complexType>
+         <xs:complexType name="isAliveResponse">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="return" type="xs:string"/>
+            </xs:sequence>
+         </xs:complexType>
+      </xs:schema>
+      <xs:schema elementFormDefault="qualified" targetNamespace="urn:identification.exception.ecare" version="1.0" xmlns:tns="urn:identification.exception.ecare" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+         <xs:element name="ExceptionDonneesInvalides" type="tns:ExceptionDonneesInvalides"/>
+         <xs:element name="ExceptionDossierNonTrouve" type="tns:ExceptionDossierNonTrouve"/>
+         <xs:element name="ExceptionErreurInterne" type="tns:ExceptionErreurInterne"/>
+         <xs:complexType name="ExceptionDossierNonTrouve">
+            <xs:sequence>
+               <xs:element name="nomComposant" nillable="true" type="xs:string"/>
+               <xs:element name="nomFamille" nillable="true" type="xs:string"/>
+               <xs:element name="codeMessage" nillable="true" type="xs:string"/>
+               <xs:element name="nomClasse" nillable="true" type="xs:string"/>
+               <xs:element name="dateException" nillable="true" type="xs:dateTime"/>
+               <xs:element name="gravite" nillable="true" type="xs:string"/>
+               <xs:element name="param1" nillable="true" type="xs:string"/>
+               <xs:element name="param2" nillable="true" type="xs:string"/>
+               <xs:element name="param3" nillable="true" type="xs:string"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="ExceptionErreurInterne">
+            <xs:sequence>
+               <xs:element name="nomComposant" nillable="true" type="xs:string"/>
+               <xs:element name="nomFamille" nillable="true" type="xs:string"/>
+               <xs:element name="codeMessage" nillable="true" type="xs:string"/>
+               <xs:element name="nomClasse" nillable="true" type="xs:string"/>
+               <xs:element name="dateException" nillable="true" type="xs:dateTime"/>
+               <xs:element name="gravite" nillable="true" type="xs:string"/>
+               <xs:element name="param1" nillable="true" type="xs:string"/>
+               <xs:element name="param2" nillable="true" type="xs:string"/>
+               <xs:element name="param3" nillable="true" type="xs:string"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="ExceptionDonneesInvalides">
+            <xs:sequence>
+               <xs:element name="nomComposant" nillable="true" type="xs:string"/>
+               <xs:element name="nomFamille" nillable="true" type="xs:string"/>
+               <xs:element name="codeMessage" nillable="true" type="xs:string"/>
+               <xs:element name="nomClasse" nillable="true" type="xs:string"/>
+               <xs:element name="dateException" nillable="true" type="xs:dateTime"/>
+               <xs:element name="gravite" nillable="true" type="xs:string"/>
+               <xs:element name="param1" nillable="true" type="xs:string"/>
+               <xs:element name="param2" nillable="true" type="xs:string"/>
+               <xs:element name="param3" nillable="true" type="xs:string"/>
+            </xs:sequence>
+         </xs:complexType>
+      </xs:schema>
+      <xs:schema targetNamespace="urn:identification.data.ecare" version="1.0" xmlns:tns="urn:identification.data.ecare" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+         <xs:complexType name="identification">
+            <xs:complexContent>
+               <xs:extension base="tns:objetMetierIdentification">
+                  <xs:sequence>
+                     <xs:element minOccurs="0" name="adresseIpClient" type="xs:string"/>
+                     <xs:element minOccurs="0" name="adresseIpClient2" type="xs:string"/>
+                     <xs:element minOccurs="0" name="civiliteClient" type="xs:string"/>
+                     <xs:element minOccurs="0" name="codPlanTarifaire" type="xs:string"/>
+                     <xs:element minOccurs="0" name="codeEtatDossier" type="xs:string"/>
+                     <xs:element minOccurs="0" name="codeOffreType" type="xs:string"/>
+                     <xs:element minOccurs="0" name="codeProduit" type="xs:string"/>
+                     <xs:element minOccurs="0" name="codeSegmentCommercial" type="xs:string"/>
+                     <xs:element maxOccurs="unbounded" minOccurs="0" name="codesServicesOptionnels" nillable="true" type="xs:string"/>
+                     <xs:element minOccurs="0" name="derniereEtapeRecouvrement" type="xs:string"/>
+                     <xs:element minOccurs="0" name="descEtatDossier" type="xs:string"/>
+                     <xs:element minOccurs="0" name="idDossier" type="xs:string"/>
+                     <xs:element minOccurs="0" name="idSCS" type="xs:string"/>
+                     <xs:element minOccurs="0" name="idUtilisateur" type="xs:string"/>
+                     <xs:element minOccurs="0" name="indicateurClientEntreprise" type="xs:boolean"/>
+                     <xs:element minOccurs="0" name="libSiteRattachement" type="xs:string"/>
+                     <xs:element minOccurs="0" name="montantMoyenFacture" type="xs:decimal"/>
+                     <xs:element minOccurs="0" name="nomPrenomClient" type="xs:string"/>
+                     <xs:element minOccurs="0" name="numAdv" type="xs:string"/>
+                     <xs:element minOccurs="0" name="numCarteSim" type="xs:string"/>
+                     <xs:element minOccurs="0" name="numClient" type="xs:string"/>
+                     <xs:element minOccurs="0" name="numIMSI" type="xs:string"/>
+                     <xs:element minOccurs="0" name="segmentClient" type="xs:string"/>
+                     <xs:element minOccurs="0" name="typeDossier" type="xs:string"/>
+                     <xs:element minOccurs="0" name="typeOffre" type="xs:string"/>
+                     <xs:element minOccurs="0" name="valeurClient" type="xs:string"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType abstract="true" name="objetMetierIdentification">
+            <xs:sequence/>
+         </xs:complexType>
+      </xs:schema>
+      <xs:schema targetNamespace="urn:exception.ecare" version="1.0" xmlns:tns="urn:exception.ecare" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+         <xs:element name="ECareExceptionTechnique" type="tns:ECareExceptionTechnique"/>
+         <xs:complexType name="ECareExceptionTechnique">
+            <xs:sequence>
+               <xs:element form="qualified" name="nomComposant" nillable="true" type="xs:string"/>
+               <xs:element form="qualified" name="nomFamille" nillable="true" type="xs:string"/>
+               <xs:element form="qualified" name="codeMessage" nillable="true" type="xs:string"/>
+               <xs:element form="qualified" name="nomClasse" nillable="true" type="xs:string"/>
+               <xs:element form="qualified" name="dateException" nillable="true" type="xs:dateTime"/>
+               <xs:element form="qualified" name="gravite" nillable="true" type="xs:string"/>
+               <xs:element form="qualified" name="param1" nillable="true" type="xs:string"/>
+               <xs:element form="qualified" name="param2" nillable="true" type="xs:string"/>
+               <xs:element form="qualified" name="param3" nillable="true" type="xs:string"/>
+            </xs:sequence>
+         </xs:complexType>
+      </xs:schema>
+   </wsdl:types>
+   <wsdl:message name="getIdentificationResponse">
+      <wsdl:part element="ns1:getIdentificationResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getVersion">
+      <wsdl:part element="ns1:getVersion" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="isAliveResponse">
+      <wsdl:part element="ns1:isAliveResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="ECareExceptionTechnique">
+      <wsdl:part element="ns2:ECareExceptionTechnique" name="ECareExceptionTechnique"/>
+   </wsdl:message>
+   <wsdl:message name="ExceptionDossierNonTrouve">
+      <wsdl:part element="ns3:ExceptionDossierNonTrouve" name="ExceptionDossierNonTrouve"/>
+   </wsdl:message>
+   <wsdl:message name="getVersionResponse">
+      <wsdl:part element="ns1:getVersionResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getIdentification">
+      <wsdl:part element="ns1:getIdentification" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="isAlive">
+      <wsdl:part element="ns1:isAlive" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="ExceptionDonneesInvalides">
+      <wsdl:part element="ns3:ExceptionDonneesInvalides" name="ExceptionDonneesInvalides"/>
+   </wsdl:message>
+   <wsdl:message name="ExceptionErreurInterne">
+      <wsdl:part element="ns3:ExceptionErreurInterne" name="ExceptionErreurInterne"/>
+   </wsdl:message>
+   <wsdl:portType name="IdentificationManager">
+      <wsdl:operation name="getIdentification">
+         <wsdl:input message="ns1:getIdentification" name="getIdentification"/>
+         <wsdl:output message="ns1:getIdentificationResponse" name="getIdentificationResponse"/>
+         <wsdl:fault message="ns1:ECareExceptionTechnique" name="ECareExceptionTechnique"/>
+         <wsdl:fault message="ns1:ExceptionDossierNonTrouve" name="ExceptionDossierNonTrouve"/>
+         <wsdl:fault message="ns1:ExceptionDonneesInvalides" name="ExceptionDonneesInvalides"/>
+         <wsdl:fault message="ns1:ExceptionErreurInterne" name="ExceptionErreurInterne"/>
+      </wsdl:operation>
+      <wsdl:operation name="getVersion">
+         <wsdl:input message="ns1:getVersion" name="getVersion"/>
+         <wsdl:output message="ns1:getVersionResponse" name="getVersionResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="isAlive">
+         <wsdl:input message="ns1:isAlive" name="isAlive"/>
+         <wsdl:output message="ns1:isAliveResponse" name="isAliveResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

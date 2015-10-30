@@ -1,0 +1,5 @@
+package com.orange.OSAC.services.implementation;
+
+public class OrigineService implements IOrigineService{
+
+}

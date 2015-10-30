@@ -1,0 +1,32 @@
+package com.orange.OSAC.dao;
+
+import java.util.List;
+
+import com.orange.OSAC.entities.Ticket;
+import com.orange.OSAC.entities.User;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TicketDAO extends JpaRepository<Ticket, Long>
+{
+    /*
+    ###############################
+    #                             #
+    #       Default method        #
+    #    (delete, save, FindAll,  #
+    #      getOne, flush, ...)    #
+    #                             #
+    ###############################
+    */
+	public User findById(Long ticketId);
+	
+	public Page<Ticket> findAll(Pageable pageable);
+
+	public List<Ticket> findByDeletedDateIsNull();
+	
+	public Page<Ticket> findByDeletedDateIsNull(Pageable pageable);
+
+	public void saveTicket(Ticket ticketToSave);
+}

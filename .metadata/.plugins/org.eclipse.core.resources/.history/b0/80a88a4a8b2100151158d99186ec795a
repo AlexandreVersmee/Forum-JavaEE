@@ -1,0 +1,623 @@
+package com.orange.OSAC.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.orange.OSAC.entities.User;
+import com.orange.OSAC.forms.ResearchBar;
+import com.orange.OSAC.forms.RowByPage;
+import com.orange.OSAC.forms.SearchForm;
+import com.orange.OSAC.services.IApplicationService;
+import com.orange.OSAC.services.IUserService;
+import com.orange.OSAC.services.implementation.ValidatorResearchBar;
+import com.orange.OSAC.services.implementation.ValidatorSearchForm;
+import com.orange.OSAC.tools.Ldap;
+
+@Controller
+@RequestMapping(value = "/administration-utilisateurs") 
+public class administrationUserController
+{
+	/* Debug */
+	private final static Logger logger = LoggerFactory
+			.getLogger(administrationUserController.class);
+
+	@Resource
+	IApplicationService applicationService;
+
+	@Resource
+	ValidatorSearchForm validatorSearchForm;
+
+	@Resource
+	ValidatorResearchBar validatoResearchBar;
+	
+	@Resource
+	IUserService userService;
+	
+	static final public int NbRowByPage = 3;
+	
+	/*
+	###############################
+	#                             #
+	#            GET              #
+	#                             #
+	###############################
+	*/
+	/*
+	###############################
+	#        Default view         #    
+	###############################
+	*/  
+	/**/
+	@RequestMapping(method = RequestMethod.GET)
+	public String fillUserTable( @PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			ModelMap model, HttpSession session, HttpServletRequest request)
+	{		
+	
+		Page<User> userList = userService.findByDeletedDateIsNull(pageable);
+	
+		model.addAttribute("size",NbRowByPage);	
+		
+		float nrOfPages = userList.getTotalPages();
+		logger.debug("number of pages = {}, Nbitem:{}, currentPAge:{}",
+				nrOfPages,userList.getTotalElements()
+				,userList.getTotalPages(), userList.getNumber());
+		
+		/* Var for display the pagination */
+		model.addAttribute("nbItem", (userList.getTotalElements()-1));
+		model.addAttribute("currentPage", userList.getNumber());
+		/* Var RowByPage for preference */
+		model.addAttribute("updateRowByPage", new RowByPage());
+		/* List all user in DB but not deleted */
+		model.addAttribute("userListFromDB", userList.getContent());
+		/* Var print data rescued from research */
+		model.addAttribute("user", new User());
+		/* Empty var for update user */
+		model.addAttribute("userToUpdate", new User());
+		/* Empty var for delete user */
+		model.addAttribute("userToDelete", new User());
+		/* Var use to search on ldap */
+		model.addAttribute("seekOnLdap", new SearchForm());
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+		/* Add application in view for add user form */
+		model.addAttribute("findUser", new ResearchBar());
+		
+		/* If research has been done on LDAP fill the form */
+		User userFromLdap = (User) session.getAttribute("user");
+		if (userFromLdap != null)
+			model.addAttribute("user", userFromLdap);
+		return "administrationUser";
+	}
+	/*
+	###############################
+	#        Research view        #    
+	###############################
+	*/  
+	@RequestMapping(value="/searchUser", method = RequestMethod.GET)
+	public String fillUserTableResearch(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable, 	
+			ModelMap model, HttpSession session, HttpServletRequest request)
+	{		
+		@SuppressWarnings("unchecked")
+		List<Long> userIds = (List<Long>) session.getAttribute("userIds");
+		
+		Page<User> userPaged = userService.findByIdIn(userIds, pageable);
+		
+		/* Var RowByPage for preference */
+		model.addAttribute("updateRowByPage", new RowByPage());
+		/* Var for display the pagination */
+		model.addAttribute("nbItem", (userPaged.getNumberOfElements() * userPaged.getTotalPages())-1);
+		model.addAttribute("currentPage", userPaged.getNumber());
+		/* List all user in DB but not deleted */
+		model.addAttribute("userListFromDB", userPaged.getContent());
+		/* Var print data rescued from research */
+		model.addAttribute("user", new User());
+		/* Empty var for update user */
+		model.addAttribute("userToUpdate", new User());
+		/* Empty var for delete user */
+		model.addAttribute("userToDelete", new User());
+		/* Var use to search on ldap */
+		model.addAttribute("seekOnLdap", new SearchForm());
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+		/* Add application in view for add user form */
+		model.addAttribute("findUser", new ResearchBar());
+		
+		/* If research has been done on LDAP fill the form */
+		User userFromLdap = (User) session.getAttribute("user");
+		if (userFromLdap != null)
+			model.addAttribute("user", userFromLdap);
+		return "administrationUser";
+	}
+	/*
+	###############################
+	#     Modification view       #    
+	###############################
+	*/  
+	@RequestMapping(value="{id}/update", method = RequestMethod.GET)
+		public String fillUpdateView(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@PathVariable("id") String userToUpdate, ModelMap model)
+	{
+		logger.debug("Dans le controleur d'update !");
+		User userData = userService.findById(Long.parseLong(userToUpdate));
+		model.addAttribute("userToUpdate", userData);
+		
+		/* List all user in DB but not deleted */
+		Page<User> userList = userService.findByDeletedDateIsNull(pageable);
+
+		float nrOfPages = userList.getTotalPages();
+		logger.debug("number of pages = {}, Nbitem:{}, currentPAge:{}",
+				nrOfPages,userList.getNumberOfElements() * userList.getTotalPages()
+				,userList.getTotalPages(), userList.getNumber());
+		
+		/* Var for display the pagination */
+		model.addAttribute("nbItem", (userList.getNumberOfElements() * userList.getTotalPages())-1);
+		model.addAttribute("currentPage", userList.getNumber());
+		/* Var print data rescued from research */
+		model.addAttribute("user", new User());
+		/* Empty var for delete user */
+		model.addAttribute("userToDelete", new User());
+		/* Var use to search on ldap */
+		model.addAttribute("seekOnLdap", new SearchForm());
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+		return "administrationUser";
+	}
+	/*
+	###############################
+	#        Delete view          #    
+	###############################
+	*/  
+	@RequestMapping(value="/{id}/delete", method = RequestMethod.GET)
+	public String fillDeleteView(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@PathVariable("id") String userToUpdate, ModelMap model, HttpSession session)
+	{
+		logger.debug("Dans le controleur de delete !");
+		
+		User userData = userService.findById(Long.parseLong(userToUpdate));
+		
+		model.addAttribute("userToDelete", userData);
+		
+		/* List all user in DB but not deleted */
+		Page<User> userList = userService.findByDeletedDateIsNull(pageable);
+
+		float nrOfPages = userList.getTotalPages();
+		logger.debug("number of pages = {}, Nbitem:{}, currentPAge:{}",
+				nrOfPages,userList.getNumberOfElements() * userList.getTotalPages()
+				,userList.getTotalPages(), userList.getNumber());
+		
+		/* Var for display the pagination */
+		model.addAttribute("nbItem", (userList.getNumberOfElements() * userList.getTotalPages())-1);
+		model.addAttribute("currentPage", userList.getNumber());
+		/* Var print data rescued from research */
+		model.addAttribute("user", new User());
+		/* Empty var for update user */
+		model.addAttribute("userToUpdate", new User());
+		/* Var use to search on ldap */
+		model.addAttribute("seekOnLdap", new SearchForm());
+		/* Add application in view for add user form */
+		
+		model.addAttribute("applicationList", applicationService.findAll());
+		return "administrationUser";
+	}
+	/*
+	###############################
+	#                             #
+	#           POST              #
+	#                             #
+	###############################
+	*/
+	/*
+	###############################
+	#      Research LDAP form     #  IMSY7472 | NLWL3517   
+	###############################
+	*/  
+	@RequestMapping(value = "/seekLdap", method = RequestMethod.POST)
+	public String getForm(@Valid @ModelAttribute(value = "seekOnLdap") SearchForm cuidInput,
+			BindingResult result, ModelMap model, HttpSession session)
+	{
+		logger.debug("Submit LDAP Form - search on LDAP");
+		Ldap ldap = new Ldap();
+		User userData = new User();
+
+		/* Validation if input search is not Empty */
+		validatorSearchForm.validate(cuidInput, result);
+		/* Set user Data in view */
+		model.addAttribute("user", userData);
+		/* List all user in DB but not deleted */
+		model.addAttribute("userListFromDB",
+				userService.findByDeletedDateIsNull());
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+
+		/* Check if there is an error */
+		if (result.hasErrors()) {
+			logger.debug("ERROR ON SUBMIT - LDAP (Number error :{})",
+					+result.getErrorCount());
+			return ("administrationUser");
+		}
+		/* check if user already exist */
+		logger.debug("Vérification que l'utilisateur n'existe pas déjà en base");
+		User check = userService.findByCuid(cuidInput.getinputResearch());
+				if (check != null && check.getCuid() != null)
+		{
+			result.rejectValue("inputResearch","seekOnLdap.inputResearch");	
+			return ("administrationUser");
+		}
+		logger.debug("Recherche sur le ldap du user via son CUID");
+		/* Search on LDAP CUID */
+		userData = ldap.chercheRessourceCUID(cuidInput.getinputResearch());
+		session.setAttribute("user", userData);
+		
+		return "redirect:/administration-utilisateurs#open";
+	}
+	/*
+	###############################
+	#    Add a new user form      #
+	###############################
+	*/  
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String addUserForm(@Valid @ModelAttribute(value = "user") User userTemp,
+			BindingResult result, ModelMap model, HttpSession session,
+			final RedirectAttributes redirectAttributes)
+	{
+		User userData = new User();
+		Ldap ldap = new Ldap();
+
+		/* List all user in DB but not deleted */
+		model.addAttribute("userListFromDB",
+				userService.findByDeletedDateIsNull());
+		/* Var use to search on ldap */
+		model.addAttribute("seekOnLdap", new SearchForm());
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+
+		if (result.hasErrors()) {
+			logger.debug("ERROR ON SUBMIT - AddUser (Number error :{})",
+					+result.getErrorCount());
+			return ("administrationUser");
+		}
+		logger.debug("New rechearch on LDAP");
+		userData = ldap.chercheRessourceCUID(userTemp.getCuid());
+
+		logger.debug("Set application defautlt and Password");
+		if (userTemp.getIdApplication().contains("-1") == false)
+			userData.setApplicationDefault(applicationService
+					.getApplication(Long.valueOf(userTemp.getIdApplication())));
+		userData.setPassword(userTemp.getPassword());
+
+		userService.saveUser(userData);		
+
+		/* Remove class form session */
+		logger.debug("Delete de la session");
+		session.removeAttribute("user");
+		logger.debug("Add message flash");
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","L'utilisateur "+ 
+		userData.getFirstName()+" "+userData.getName()+" a bien été ajouté en base de donnée.");
+		return ("redirect:/administration-utilisateurs");
+	}
+	/*
+	###############################
+	#     Update a user form      #
+	###############################
+	*/  
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST)
+	public String updateUserForm(@Valid @ModelAttribute(value="userToUpdate") User userTemp,
+			BindingResult result, ModelMap model, HttpSession session,
+			final RedirectAttributes redirectAttributes)
+	{
+		userService.saveUser(userTemp);
+		logger.debug("Add message flash");
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","L'utilisateur "+ 
+				userTemp.getFirstName()+" "+userTemp.getName()+" a bien été modifié en base de donnée.");
+		return ("redirect:/administration-utilisateurs");
+	}
+	/*
+	###############################
+	#      Delete user form       #
+	###############################
+	*/  
+	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
+	public String deleteUserForm(@Valid @ModelAttribute(value = "userToDelete") User userTemp,
+			BindingResult result, ModelMap model, HttpSession session,
+			final RedirectAttributes redirectAttributes)
+	{
+		userService.deleteUser(userTemp.getId());
+		logger.debug("Add message flash");
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","L'utilisateur "+ 
+				userTemp.getFirstName()+" "+userTemp.getName()+" a bien été supprimé en base de donnée.");
+		return ("redirect:/administration-utilisateurs");
+	}
+	/*
+	###############################
+	#      Search user form       #
+	###############################
+	*/  
+	@RequestMapping(value = "/searchUser", method = RequestMethod.POST)
+	public String searchUserForm(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "findUser") ResearchBar research, BindingResult result, ModelMap model,
+			 HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+		logger.debug("Recherche en base d'un user['{}']", research.getResearch());
+		List<User> userList = userService.readByNameAndFirstnameAndCUID(research);
+		/* Validation if input search is not Empty */
+		validatoResearchBar.validate(research, result);
+			
+		List<Long> userIds = new ArrayList<Long>();
+		for (int i = 0; i < userList.size() ;i++)
+			userIds.add(userList.get(i).getId());
+			
+		Page<User> userPaged = userService.findByIdIn(userIds, pageable);
+
+		session.setAttribute("userIds", userIds);
+		
+		/* Var for display the pagination */
+		model.addAttribute("nbItem", (userPaged.getNumberOfElements() * userPaged.getTotalPages())-1);
+		model.addAttribute("currentPage", userPaged.getNumber());
+		/* List all user in DB but not deleted */
+		model.addAttribute("userListFromDB", userPaged.getContent());
+		/* Var print data rescued from researchForm */
+		model.addAttribute("user", new User());
+		/* Empty var for update user */
+		model.addAttribute("userToUpdate", new User());
+		/* Empty var for delete user */
+		model.addAttribute("userToDelete", new User());
+		/* Var use to search on ldap */
+		model.addAttribute("seekOnLdap", new SearchForm());
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+		
+		if (result.hasErrors()) {
+		logger.debug("Add message flash");
+		redirectAttributes.addFlashAttribute("ERROR_MESSAGE","L'utilisateur "+research.getResearch()+" n'a bien été trouvé en base de donnée.");
+		}
+		return ("administrationUser");
+	}
+	/*
+	###############################
+	#   update RowByPage form     #
+	###############################
+	*/  
+	@RequestMapping(value = "/updateRowByPage", method = RequestMethod.POST)
+	public String updateRowByPage(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "updateRowByPage") RowByPage rowByPage, 
+			ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+			
+		logger.debug("Value de rowBypage {}",rowByPage.getRowByPage());
+		
+		/* Var for display the pagination */
+		Page<User> userList = userService.findByDeletedDateIsNull(pageable);
+		model.addAttribute("nbItem", (userList.getNumberOfElements() * userList.getTotalPages())-1);
+		model.addAttribute("currentPage", userList.getNumber());
+		/* List all user in DB but not deleted */
+		model.addAttribute("userListFromDB", userList.getContent());
+		/* Var print data rescued from research */
+		model.addAttribute("user", new User());
+		/* Empty var for update user */
+		model.addAttribute("userToUpdate", new User());
+		/* Empty var for delete user */
+		model.addAttribute("userToDelete", new User());
+		/* Var use to search on ldap */
+		model.addAttribute("seekOnLdap", new SearchForm());
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+		/* Add application in view for add user form */
+		model.addAttribute("findUser", new ResearchBar());
+		
+		return ("administrationUser");
+	}
+	
+	/*
+	###############################
+	# update displayDeleted form  #
+	###############################
+	*/  
+	@RequestMapping(value = "/updateDisplayDeleted", method = RequestMethod.POST)
+	public String updateDisplayDeleted(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "updateDisplayDeleted") ResearchBar research, 
+			ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+			
+		
+		/* Var for display the pagination */
+		Page<User> userList = userService.findByDeletedDateIsNull(pageable);
+		model.addAttribute("nbItem", (userList.getNumberOfElements() * userList.getTotalPages())-1);
+		model.addAttribute("currentPage", userList.getNumber());
+		/* List all user in DB but not deleted */
+		model.addAttribute("userListFromDB", userList.getContent());
+		/* Var print data rescued from research */
+		model.addAttribute("user", new User());
+		/* Empty var for update user */
+		model.addAttribute("userToUpdate", new User());
+		/* Empty var for delete user */
+		model.addAttribute("userToDelete", new User());
+		/* Var use to search on ldap */
+		model.addAttribute("seekOnLdap", new SearchForm());
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+		/* Add application in view for add user form */
+		model.addAttribute("findUser", new ResearchBar());
+		
+		
+		return ("administrationUser");
+	}
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/* Form in modal, use for to add a new user */
+//	@RequestMapping(value = "/administration-utilisateurs", method = RequestMethod.POST)
+//	public String getForm(@Valid @ModelAttribute(value="user") User userTemp,@Valid @ModelAttribute(value = ) User ldapResult,
+//			BindingResult result, ModelMap model, HttpSession session, HttpServletRequest request, RedirectAttributes redir) 
+//	{
+//		if (result.hasErrors())
+//			{
+//				logger.debug("ERROR ON SUBMIT");
+//				/* List all user in DB but not deleted */
+//				model.addAttribute("userListFromDB", userService.findByDeletedDateIsNull());
+//				/* Add application in view for add user form */
+//				model.addAttribute("applicationList", applicationService.findAll());
+//				return ("administrationUser");
+//			}
+//	
+//		if (request.getParameter("userAdd") != null)
+//		{
+//			logger.debug("#### ADD USER IN DB ####");
+//			User userData = new User();
+//			Ldap ldap = new Ldap();
+//			logger.debug("Call LDAP");
+//			userTemp.setApplicationDefault((Application) model.get("applicationList"));
+//			logger.debug("New rechearch on LDAP");
+//			userData = ldap.chercheRessourceCUID(userTemp.getCuid());
+//			logger.debug("Set application defautlt and Password");
+//			if (userTemp.getIdApplication().contains("-1") == false)
+//				userData.setApplicationDefault(applicationService.getApplication(Long.valueOf(userTemp.getIdApplication())));
+//			userData.setPassword(userTemp.getPassword());	
+//			userService.saveUser(userData);
+//			/* Remove class form session */
+//			logger.debug("Delete de la session");
+//			session.removeAttribute("user");
+//		}
+//		else
+//		{
+//			logger.debug("#### LDAP REASEARCH ####");
+//			logger.debug("New rechearch on LDAP");
+//			Ldap ldap = new Ldap();
+//			User userData = new User();
+//			userData = ldap.chercheRessourceCUID(userTemp.getCuid());
+//			
+//			/* Set user Data in view */
+//			model.addAttribute("user", userData);		
+//			
+//			session.setAttribute("user", userData);		
+//		}
+//		return "redirect:/administration-utilisateurs";
+//	}
+	
+	/* Form in modal, use for browse the LDAP */
+//	@RequestMapping(value = "/administration-utilisateurs/ldap", method = RequestMethod.POST)
+//	public String getLdap(@Valid @ModelAttribute(value = "seekOnLdap") User userTemp, BindingResult result, ModelMap model, HttpSession session )
+//	{
+//		logger.debug("#### fromSeekOnLdap ####");
+//		Ldap ldap = new Ldap();
+//		User userData = new User();
+//		
+//		if (result.hasErrors())
+//		{	
+//			logger.debug("ERROR ON SUBMIT - fromSeekOnLdap");
+//			/* Set user Data in view */
+//			model.addAttribute("user", userData);	
+//			return ("redirect:/administration-utilisateurs");
+//		}
+//		logger.debug("New rechearch on LDAP");
+//		userData = ldap.chercheRessourceCUID(userTemp.getCuid());
+//		
+//		/* Set user Data in view */
+//		model.addAttribute("user", userData);		
+//		
+//		session.setAttribute("user", userData);
+//		return "redirect:/administration-utilisateurs#open";
+//	}
+
+
+//@RequestMapping(value="/administration-utilisateurs/recherche-ldap", method=RequestMethod.GET) //	public String setForm(ModelMap model) //	{ //		User user = new User(); //		Ldap ldap = new Ldap(); // // //		/* Get user informations with LDAP */ ////		user = ldap.chercheRessourceCUID("NLWL3517"); //		user = ldap.chercheRessourceCUID("IMSY7472"); // //		model.addAttribute("userList", userService.findByDeletedDateIsNull()); //		model.addAttribute("user", user); // //		return "administrationUser"; //	}

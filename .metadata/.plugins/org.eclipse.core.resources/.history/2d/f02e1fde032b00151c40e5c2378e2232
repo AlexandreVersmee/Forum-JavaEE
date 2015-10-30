@@ -1,0 +1,226 @@
+package com.orange.OSAC.entities;
+
+import javax.persistence.*;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.orange.OSAC.forms.Preference;
+
+import java.io.Serializable;
+import java.util.Date;
+
+@Entity
+@Table(name="utilisateur")
+public class User implements Serializable {
+	/*
+	###############################
+	#                             #
+	# Constructeur / Destructeur  #
+	#                             #
+	###############################
+	*/
+	public User()
+	{
+		this.preference = new Preference();
+	}
+	/*
+	###############################
+	#                             #
+	#         Attributs           #
+	#                             #
+	###############################
+	*/
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long		id;
+
+	@Column(name = "cuid", nullable = false, unique = true)
+	private String		cuid;
+	
+	@Column(name = "nom", nullable = false)
+	private String		name;
+
+	@Column(name = "prenom", nullable = false)
+	private String		firstName;
+
+	@NotEmpty
+	@Column(name = "password", nullable = false)
+	private String		password;
+
+	@Column(name = "email", nullable = false)
+	private String 		email;
+
+	@DateTimeFormat(pattern="dd.MM HH:mm")
+	@Column(name = "date_suppression")
+	private Date 		deletedDate;
+	
+	/*
+	|------------------------------|
+	|  Var not store in database   |    
+	|------------------------------|
+	*/
+	@Transient
+	private long 		idApplication;
+	
+	@Transient
+	private Preference 	preference;
+	
+	@Transient
+	private long 		idUserType;
+	/*
+	###############################
+	#                             #
+	#         Relation            #
+	#                             #
+	###############################
+	*/
+	@ManyToOne
+	private UserType	userType;
+
+	@ManyToOne
+	private Application	applicationDefault;
+	/*
+	###############################
+	#                             #
+	#         Getter              #
+	#                             #
+	###############################
+	*/
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+	
+	public long getId() {
+		return this.id;
+	}
+
+	public String getCuid() {
+		return this.cuid;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public Date getDeletedDate() {
+		return this.deletedDate;
+	}
+
+	public UserType getUserType() {
+		return this.userType;
+	}
+
+	public Application getApplicationDefault() {
+		return this.applicationDefault;
+	}
+
+	public long getIdApplication() {
+		return this.idApplication;
+	}
+
+	public Preference getPreference() {
+		return preference;
+	}
+	
+	public long getIdUserType() {
+		return this.idUserType;
+	}
+	/*
+	###############################
+	#                             #
+	#         Setter              #
+	#                             #
+	###############################
+	*/
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setCuid(String cuid) {
+		this.cuid = cuid;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setDeletedDate(Date deletedDate) {
+		this.deletedDate = deletedDate;
+	}
+
+	public void setUserType(UserType userType) {
+		this.userType = userType;
+	}
+
+	public void setApplicationDefault(Application applicationDefault) {
+		this.applicationDefault = applicationDefault;
+	}
+
+	public void setIdApplication(long idApplication) {
+		this.idApplication = idApplication;
+	}
+
+	public void setPreference(Preference preference) {
+		this.preference = preference;
+	}
+	
+	public void setIdUserType(long idUserType) {
+		this.idUserType = idUserType;
+	}
+	/*
+	###############################
+	#                             #
+	#           Methods           #
+	#                             #
+	###############################
+	*/
+	@Override
+	public String toString()
+	{
+		String message;
+		
+		message="Id : "+this.getId()+ 
+				", CUID : "+this.getCuid()+
+				", Name : "+this.getName()+
+				", FirstName : "+this.getFirstName()+
+				", idApplication : "+this.getIdApplication()+			
+				", idUsertype : "+this.getIdUserType()+
+				", Password : "+this.getPassword()+
+				", Email : "+this.getEmail()+
+				", Deleted : "+this.getDeletedDate()+
+				", Preference : ["+this.getPreference().getRowByPage()+
+				", "+this.getPreference().isDisplayDeleted()+"]";
+		if (this.getUserType() != null)
+			message += ", Usertype : "+this.getUserType().getName();
+		if (this.getApplicationDefault() != null)
+			message +=", Application : "+this.getApplicationDefault().getName();
+		return (message);
+	}
+}

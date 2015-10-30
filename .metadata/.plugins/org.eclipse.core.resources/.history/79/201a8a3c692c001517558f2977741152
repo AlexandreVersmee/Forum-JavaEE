@@ -1,0 +1,654 @@
+package com.orange.OSAC.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.orange.OSAC.entities.User;
+import com.orange.OSAC.forms.Preference;
+import com.orange.OSAC.forms.ResearchBar;
+import com.orange.OSAC.forms.SearchForm;
+import com.orange.OSAC.services.IApplicationService;
+import com.orange.OSAC.services.IUserService;
+import com.orange.OSAC.services.IUserTypeService;
+import com.orange.OSAC.services.implementation.ValidatorResearchBar;
+import com.orange.OSAC.services.implementation.ValidatorSearchForm;
+import com.orange.OSAC.tools.Ldap;
+
+@Controller
+@RequestMapping(value = "/administration/utilisateurs") 
+public class AdministrationUserController
+{
+	/* Debug */
+	private final static Logger logger = LoggerFactory.getLogger(AdministrationUserController.class);
+
+	@Resource
+	IApplicationService		applicationService;
+	
+	@Resource
+	IUserTypeService		userTypeService;
+
+	@Resource
+	IUserService 			userService;
+	
+	@Resource
+	ValidatorSearchForm		validatorSearchForm;
+
+	@Resource
+	ValidatorResearchBar	validatoResearchBar;
+	
+	/* Static VAR */
+	static public enum Action{
+		MAIN, 
+		UPDATE,
+		UPDATEDROMLDAP,
+		SEEKONLDAP,
+		DELETED, 
+		ADD, 
+		DEFAULT, 
+		RESEARCH};
+	
+	/* Pagination */
+	static final public int		NbRowByPage = 10;
+	
+
+	/* Set all variables need to display the view correctly */
+	void setDefaultViewVariables(Pageable pageable, ModelMap model, Page<User> userListResearch, Action flag, Preference pref)
+	{
+		logger.debug(" ================================== DEFAULT VAR SET [START] ===============================================");
+		Page<User> userList;
+		
+		if (flag != Action.RESEARCH){
+			/* List of User display on main view */
+			if (pref != null && pref.isDisplayDeleted() == true)
+				userList = userService.findAll(pageable);
+			else
+				userList = userService.findByDeletedDateIsNull(pageable);
+		}
+		else{
+			/* List of User display after research on the main view */
+			userList = userListResearch;
+		}
+		logger.debug("Pagesize ={} ", pageable.getPageSize());	
+		float nrOfPages = userList.getTotalPages();
+		logger.debug("number of pages ="+nrOfPages,userList.getTotalElements()-1+", Nbitem:"+userList.getTotalPages()+", "+"currentPAge:"+userList.getNumber());
+		/* Var for display the pagination */
+		model.addAttribute("NumberElementByPage", pageable.getPageSize());	
+		model.addAttribute("NumberTotalOfElement", (userList.getTotalElements()-1));
+		model.addAttribute("currentPage", userList.getNumber());
+		/* Var Preference */
+		model.addAttribute("updatePreference", pref);
+		/* List all user in DB but not deleted */
+		model.addAttribute("userListFromDB", userList.getContent());
+		
+		/* Var print data rescued from research */
+		if  (flag != Action.ADD)
+			model.addAttribute("user", new User());
+		
+		if (flag != Action.UPDATE && flag != Action.UPDATEDROMLDAP){
+			/* Empty var for update user */
+			model.addAttribute("userToUpdate", new User());
+		}
+		
+		if (flag != Action.DELETED){
+			/* Empty var for delete user */
+			model.addAttribute("userToDelete", new User());
+		}
+		
+		if (flag != Action.SEEKONLDAP){
+			/* Var use to search on ldap */
+			model.addAttribute("seekOnLdap", new SearchForm());
+		}
+		
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+		/* Add application in view for add user form */
+		model.addAttribute("userTypeList", userTypeService.findAll());
+		
+		/* Add application in view for add user form */
+		model.addAttribute("findUser", new ResearchBar());
+		logger.debug(" ================================== DEFAULT VAR SET [END] ===============================================");
+	}	
+	/*
+	###############################
+	#                             #
+	#            GET              #
+	#                             #
+	###############################
+	*/
+	/*
+	|------------------------------|
+	|        Default view          |    
+	|------------------------------|
+	*/  
+	@RequestMapping(method = RequestMethod.GET)
+	public String fillUserTable(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			ModelMap model, HttpSession session, HttpServletRequest request)
+	{			
+		logger.debug("User in session [{}]", session.getAttribute("userSession").toString());
+		User userPref 	= (User) session.getAttribute("userSession");
+		pageable 		= new PageRequest(pageable.getPageNumber(), userPref.getPreference().getRowByPage());
+		
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, null, Action.MAIN, userPref.getPreference());
+		
+		/* If research has been done on LDAP fill the form */
+		User userFromLdap = (User) session.getAttribute("userFindOnLDAP");
+		if (userFromLdap != null)
+			model.addAttribute("user", userFromLdap);
+		return "administrationUser";
+	}
+	/*
+	|------------------------------|
+	|  Research view on main page  |    
+	|------------------------------|
+	*/  
+	@RequestMapping(value="/searchUser", method = RequestMethod.GET)
+	public String fillUserTableResearch(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable, 	
+			ModelMap model, HttpSession session, HttpServletRequest request)
+	{		
+		@SuppressWarnings("unchecked")
+		List<Long> userIds	= (List<Long>) session.getAttribute("userIds");
+		Page<User> userList	= userService.findByIdIn(userIds, pageable);
+		
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, userList, Action.DEFAULT, null);
+		
+		/* If research has been done on LDAP fill the form */
+		User userFromLdap = (User) session.getAttribute("userFindOnLDAP");
+		if (userFromLdap != null)
+			model.addAttribute("user", userFromLdap);
+		return "administrationUser";
+	}
+	/*
+	|------------------------------|
+	|      Modification view       |    
+	|------------------------------|
+	*/
+	@RequestMapping(value="{id}/update", method = RequestMethod.GET)
+	public String fillUpdateView(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@PathVariable("id") String userToUpdate, ModelMap model, HttpSession session)
+	{
+		logger.debug("Dans le controleur d'update ! id =[{}]", userToUpdate);
+		User userPref = (User) session.getAttribute("userSession");
+		
+		/* Seek user in database to update */
+		User userData = userService.findById(Long.parseLong(userToUpdate));
+		
+		/* Set value selected in base on Application default field */
+		if (userData.getApplicationDefault() != null)
+			userData.setIdApplication(userData.getApplicationDefault().getId());
+		else
+			userData.setIdApplication(-1);
+		
+		/* Set value selected in base on User Type field */
+		if (userData.getUserType() != null)
+			userData.setIdUserType(userData.getUserType().getId());
+		else
+			userData.setIdUserType(-1);		
+		
+		model.addAttribute("userToUpdate", userData);
+		
+		pageable = new PageRequest(pageable.getPageNumber(), userPref.getPreference().getRowByPage());
+
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, null, Action.UPDATE, userPref.getPreference());
+		return "administrationUser";
+	}
+	/*
+	|------------------------------|
+	|         Delete view          |    
+	|------------------------------|
+	*/
+	@RequestMapping(value="/{id}/delete", method = RequestMethod.GET)
+	public String fillDeleteView(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@PathVariable("id") String userToUpdate, ModelMap model, HttpSession session)
+	{
+		logger.debug("Dans le controleur de delete !");
+		User userPref = (User) session.getAttribute("userSession");
+		
+		User userData = userService.findById(Long.parseLong(userToUpdate));
+		
+		/* Set value selected in base on Application default field */
+		if (userData.getApplicationDefault() != null)
+			userData.setIdApplication(userData.getApplicationDefault().getId());
+		else
+			userData.setIdApplication(-1);
+		
+		/* Set value selected in base on User Type field */
+		if (userData.getUserType() != null)
+			userData.setIdUserType(userData.getUserType().getId());
+		else
+			userData.setIdUserType(-1);		
+		
+		model.addAttribute("userToDelete", userData);
+		pageable = new PageRequest(pageable.getPageNumber(), userPref.getPreference().getRowByPage());
+
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, null, Action.DELETED, userPref.getPreference());
+		return "administrationUser";
+	}
+	/*
+	###############################
+	#                             #
+	#           POST              #
+	#                             #
+	###############################
+	*/
+	/*
+	|------------------------------|
+	|     Research LDAP form       |    
+	|------------------------------|
+	*/ 
+	@RequestMapping(value = "/seekLdap", method = RequestMethod.POST)
+	public String getForm(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "seekOnLdap") SearchForm cuidInput,
+			BindingResult result, ModelMap model, HttpSession session)
+	{
+		logger.debug("Submit LDAP Form - search on LDAP");
+		User userPref	= (User) session.getAttribute("userSession");
+		Ldap ldap		= new Ldap();
+		User userData	= new User();
+
+		/* Validation if input search is not Empty */
+		validatorSearchForm.validate(cuidInput, result);
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, null, Action.SEEKONLDAP, userPref.getPreference());
+
+		/* Check if there is an error */
+		if (result.hasErrors()) {
+			logger.debug("ERROR ON SUBMIT - LDAP (Number error :{})",result.getErrorCount());
+			model.addAttribute("ERROR_MESSAGE","Le champs de ne peut pas être vide.");
+			return ("administrationUser");
+		}
+		/* check if user already exist */
+		logger.debug("Vérification que l'utilisateur n'existe pas déjà en base");
+		User check = userService.findByCuid(cuidInput.getinputResearch());
+		if (check != null && check.getCuid() != null)
+		{
+			logger.debug("User already exist!");
+			result.rejectValue("inputResearch","seekOnLdap.inputResearch");	
+			return ("administrationUser");
+		}
+		logger.debug("Recherche sur le ldap du user via son CUID");
+		/* Search on LDAP CUID */
+		userData = ldap.chercheRessourceCUID(cuidInput.getinputResearch());
+		session.setAttribute("userFindOnLDAP", userData);
+		return "redirect:/administration/utilisateurs#open";
+	}
+	/*
+	|------------------------------|
+	|     Add a new user form      |    
+	|------------------------------|
+	*/ 
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String addUserForm(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "user") User userTemp, BindingResult result, ModelMap model, HttpSession session,
+			final RedirectAttributes redirectAttributes)
+	{
+		logger.debug("ADD NEW USER POST");
+		User userPref	= (User) session.getAttribute("userSession");
+		User userData	= new User();
+		Ldap ldap		= new Ldap();
+
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, null, Action.ADD, userPref.getPreference());	
+		
+		if (result.hasErrors()) {
+			logger.debug("ERROR ON SUBMIT - AddUser (Number error :{}), {}",result.getErrorCount(), result.getAllErrors().get(0).getDefaultMessage());
+			model.addAttribute("ERROR_MESSAGE","L'utilisateur "+userData.getFirstName()+" "+userData.getName()+" n'a pas été ajouté en base de donnée, une erreur est survenue.");
+			return ("administrationUser");
+		}
+		
+		logger.debug("New rechearch on LDAP");
+		userData = ldap.chercheRessourceCUID(userTemp.getCuid());
+
+		logger.debug("Set application default and Password and UserType");
+		if (userTemp.getIdApplication() != -1)
+			userData.setApplicationDefault(applicationService.getApplication(userTemp.getIdApplication()));
+		if (userTemp.getIdUserType() != -1)
+			userData.setUserType(userTypeService.findById(userTemp.getIdUserType()));
+		userData.setPassword(userTemp.getPassword());
+		
+		userService.saveUser(userData);		
+
+		logger.debug("Delete de l'attribut USER de la session.");
+		session.removeAttribute("userFindOnLDAP");
+		
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","L'utilisateur "+ userData.getFirstName()+" "+userData.getName()+" a bien été ajouté en base de donnée.");
+		return ("redirect:/administration/utilisateurs");
+	}
+	/*
+	|------------------------------|
+	|       Update user form       |    
+	|------------------------------|
+	*/  
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST)
+	public String updateUserForm(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,@Valid @ModelAttribute(value="userToUpdate") User userTemp,
+			BindingResult result, ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes)
+	{
+		logger.debug("Dans le POST d'update !");
+		User userPref	= (User) session.getAttribute("userSession");
+		
+		pageable 		= new PageRequest(pageable.getPageNumber(), userPref.getPreference().getRowByPage());
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, null, Action.UPDATE, userPref.getPreference());
+		
+		/* Check if Id Application is not default value */
+		if (userTemp.getIdApplication() != -1)
+		{
+			logger.debug("Avant set : {}", userTemp.getIdApplication());
+			userTemp.setApplicationDefault(applicationService.getApplication(userTemp.getIdApplication()));
+			logger.debug("Après set : {}", userTemp.getApplicationDefault().getId());
+		}
+		/* Check if idUserType is not default value */		
+		if (userTemp.getIdUserType() != -1)
+			userTemp.setUserType(userTypeService.findById(userTemp.getIdUserType()));
+		
+		userTemp.setPassword(userTemp.getPassword());
+		
+		userService.saveUser(userTemp);
+
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","L'utilisateur "+userTemp.getFirstName()+" "+userTemp.getName()+" a bien été modifié en base de donnée.");
+		return ("redirect:/administration/utilisateurs");
+	}
+	/*
+	|------------------------------|
+	|       Delete user form       |    
+	|------------------------------|
+	*/
+	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
+	public String deleteUserForm(@Valid @ModelAttribute(value = "userToDelete") User userTemp,
+			BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{	
+		logger.debug("Dans le POST de DELETE, INFO USER = [{}]",userTemp.toString());
+		
+		userService.deleteUser(userTemp);
+		
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","L'utilisateur "+userTemp.getFirstName()+" "+userTemp.getName()+" a bien été supprimé en base de donnée.");
+		return ("redirect:/administration/utilisateurs");
+	}
+	/*
+	|------------------------------|
+	|  Search user form main page  |    
+	|------------------------------|
+	*/
+	@RequestMapping(value = "/searchUser", method = RequestMethod.POST)
+	public String searchUserForm(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "findUser") ResearchBar research, BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+		User userPref	= (User) session.getAttribute("userSession");
+		
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, null, Action.DEFAULT, userPref.getPreference());
+		
+		/* Validation if input search is not Empty */
+		validatoResearchBar.validate(research, result);
+		
+		if (result.hasErrors()) {
+			logger.debug("ERROR ON SUBMIT - research User (Number error :{})", result.getErrorCount());
+			model.addAttribute("ERROR_MESSAGE","Une erreur est survenue durant la recherche de '"+research+"' ");
+			return ("administrationUser");
+		}
+		
+		logger.debug("Recherche en base du user['{}']", research.getResearch());
+		List<User> userList = userService.readByNameAndFirstnameAndCUID(research);
+		
+		/* Create list of user to convert in Page throw the service :D Big Tricks */
+		List<Long> userIds = new ArrayList<Long>();
+		for (int i = 0; i < userList.size() ;i++)
+			userIds.add(userList.get(i).getId());
+			
+		Page<User> userPaged = userService.findByIdIn(userIds, pageable);
+
+		session.setAttribute("userIds", userIds);
+		
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, userPaged, Action.RESEARCH, userPref.getPreference());
+		
+		if (result.hasErrors())
+			redirectAttributes.addFlashAttribute("ERROR_MESSAGE","L'utilisateur "+research.getResearch()+" n'a bien été trouvé en base de donnée.");
+
+		return ("administrationUser");
+	}
+	/*
+	|------------------------------|
+	|  Update User From LDAP form  |    
+	|------------------------------|
+	*/
+	@RequestMapping(value = "/{id}/updateLDAP", method = RequestMethod.POST)
+	public String updateUserFromLDAP(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@ModelAttribute(value = "updateUserFromLDAP") User userToUpdate, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+		logger.debug("Update User From LDAP  actual value [{}]", userToUpdate.toString());
+		User userPref		= (User) session.getAttribute("userSession");
+		User userFromLdap	= new User();
+		Ldap ldap 			= new Ldap();
+		
+		userToUpdate = userService.findById(userToUpdate.getId());
+		logger.debug("Update User From LDAP  actual value [{}]", userToUpdate.toString());
+		
+		logger.debug("Seek user information on LDAP");
+		userFromLdap = ldap.chercheRessourceCUID(userToUpdate.getCuid());
+		logger.debug("Value user from LDAP [{}]", userFromLdap.toString());
+		
+		/* reset parameter not coming from LDAP (password, app default, user type) */
+		/* Set value selected in base on Application default field */
+		if (userToUpdate.getApplicationDefault() != null)
+			userFromLdap.setIdApplication(userToUpdate.getApplicationDefault().getId());
+		else
+			userFromLdap.setIdApplication(-1);
+		
+		/* Set value selected in base on User Type field */
+		if (userToUpdate.getUserType() != null)
+			userFromLdap.setIdUserType(userToUpdate.getUserType().getId());
+		else
+			userFromLdap.setIdUserType(-1);	
+		userFromLdap.setApplicationDefault(userToUpdate.getApplicationDefault());
+		userFromLdap.setPassword(userToUpdate.getPassword());
+		userFromLdap.setUserType(userToUpdate.getUserType());		
+		
+		model.addAttribute("userToUpdate",userFromLdap);
+		
+		/* Default Methods */
+		setDefaultViewVariables(pageable, model, null, Action.UPDATEDROMLDAP, userPref.getPreference());
+
+		return ("administrationUser");
+	}
+	/*
+	|------------------------------|
+	|    Update Preference form    |    
+	|------------------------------|
+	*/
+	@RequestMapping(value = "/updatePreference", method = RequestMethod.POST)
+	public String updateRowByPage(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "updatePreference") Preference preference, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+		logger.debug("Value de rowBypage {} | is deleted {}.", preference.getRowByPage(), preference.isDisplayDeleted());
+		User userPref 	= (User) session.getAttribute("userSession");
+		
+		/* Update Preference */
+		userPref.setPreference(preference);
+		session.setAttribute("userSession", userPref);
+		
+		return ("redirect:/administration/utilisateurs");
+	}
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/* Form in modal, use for to add a new user */
+//	@RequestMapping(value = "/administration-utilisateurs", method = RequestMethod.POST)
+//	public String getForm(@Valid @ModelAttribute(value="user") User userTemp,@Valid @ModelAttribute(value = ) User ldapResult,
+//			BindingResult result, ModelMap model, HttpSession session, HttpServletRequest request, RedirectAttributes redir) 
+//	{
+//		if (result.hasErrors())
+//			{
+//				logger.debug("ERROR ON SUBMIT");
+//				/* List all user in DB but not deleted */
+//				model.addAttribute("userListFromDB", userService.findByDeletedDateIsNull());
+//				/* Add application in view for add user form */
+//				model.addAttribute("applicationList", applicationService.findAll());
+//				return ("administrationUser");
+//			}
+//	
+//		if (request.getParameter("userAdd") != null)
+//		{
+//			logger.debug("#### ADD USER IN DB ####");
+//			User userData = new User();
+//			Ldap ldap = new Ldap();
+//			logger.debug("Call LDAP");
+//			userTemp.setApplicationDefault((Application) model.get("applicationList"));
+//			logger.debug("New rechearch on LDAP");
+//			userData = ldap.chercheRessourceCUID(userTemp.getCuid());
+//			logger.debug("Set application defautlt and Password");
+//			if (userTemp.getIdApplication().contains("-1") == false)
+//				userData.setApplicationDefault(applicationService.getApplication(Long.valueOf(userTemp.getIdApplication())));
+//			userData.setPassword(userTemp.getPassword());	
+//			userService.saveUser(userData);
+//			/* Remove class form session */
+//			logger.debug("Delete de la session");
+//			session.removeAttribute("user");
+//		}
+//		else
+//		{
+//			logger.debug("#### LDAP REASEARCH ####");
+//			logger.debug("New rechearch on LDAP");
+//			Ldap ldap = new Ldap();
+//			User userData = new User();
+//			userData = ldap.chercheRessourceCUID(userTemp.getCuid());
+//			
+//			/* Set user Data in view */
+//			model.addAttribute("user", userData);		
+//			
+//			session.setAttribute("user", userData);		
+//		}
+//		return "redirect:/administration-utilisateurs";
+//	}
+	
+	/* Form in modal, use for browse the LDAP */
+//	@RequestMapping(value = "/administration-utilisateurs/ldap", method = RequestMethod.POST)
+//	public String getLdap(@Valid @ModelAttribute(value = "seekOnLdap") User userTemp, BindingResult result, ModelMap model, HttpSession session )
+//	{
+//		logger.debug("#### fromSeekOnLdap ####");
+//		Ldap ldap = new Ldap();
+//		User userData = new User();
+//		
+//		if (result.hasErrors())
+//		{	
+//			logger.debug("ERROR ON SUBMIT - fromSeekOnLdap");
+//			/* Set user Data in view */
+//			model.addAttribute("user", userData);	
+//			return ("redirect:/administration-utilisateurs");
+//		}
+//		logger.debug("New rechearch on LDAP");
+//		userData = ldap.chercheRessourceCUID(userTemp.getCuid());
+//		
+//		/* Set user Data in view */
+//		model.addAttribute("user", userData);		
+//		
+//		session.setAttribute("user", userData);
+//		return "redirect:/administration-utilisateurs#open";
+//	}
+
+
+//@RequestMapping(value="/administration-utilisateurs/recherche-ldap", method=RequestMethod.GET) //	public String setForm(ModelMap model) //	{ //		User user = new User(); //		Ldap ldap = new Ldap(); // // //		/* Get user informations with LDAP */ ////		user = ldap.chercheRessourceCUID("NLWL3517"); //		user = ldap.chercheRessourceCUID("IMSY7472"); // //		model.addAttribute("userList", userService.findByDeletedDateIsNull()); //		model.addAttribute("user", user); // //		return "administrationUser"; //	}

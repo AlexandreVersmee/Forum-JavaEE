@@ -1,0 +1,37 @@
+package com.orange.OSAC.entities;
+
+import javax.persistence.*;
+
+import java.io.Serializable;
+
+@Entity
+@Table(name="sous_type_ticket")
+public class UnderTypeTicket extends GenericEntity implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+	/*
+		###############################
+		#                             #
+		#         Relation            #
+		#                             #
+		###############################
+	*/
+	@ManyToMany(mappedBy="id")
+	/*
+		###############################
+		#                             #
+		#         Getter              #
+		#                             #
+		###############################
+	*/
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+	/*
+		###############################
+		#                             #
+		#         Setter              #
+		#                             #
+		###############################
+	*/
+}

@@ -1,0 +1,158 @@
+package com.orange.OSAC.entities;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.sql.Date;
+import java.util.List;
+
+@Entity
+@Table(name="utilisateur")
+public class User implements Serializable {
+	/*
+	###############################
+	#                             #
+	# Constructeur / Destructeur  #
+	#                             #
+	###############################
+	*/
+	private static final long serialVersionUID = 1L;
+
+
+	/*
+	###############################
+	#                             #
+	#         Attribut            #
+	#                             #
+	###############################
+	*/
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long	id;
+
+	@Column(name = "cuid", nullable = false)
+	private String	cuid;
+	
+	@Column(name = "nom", nullable = false)
+	private String	name;
+
+	@Column(name = "prenom", nullable = false)
+	private String	firstName;
+
+	@Column(name = "login", nullable = false)
+	private String	login;
+
+	@Column(name = "password", nullable = false)
+	private String	password;
+
+//	@Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
+//			+"[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
+//			+"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+//			message="{invalid.email}")
+	@Column(name = "email", nullable = false)
+	private String email;
+
+	@Column(name = "date_suppression")
+	private Date deletedDate;
+	/*
+	###############################
+	#                             #
+	#         Relation            #
+	#                             #
+	###############################
+	*/
+	@ManyToOne
+	private UserType userType;
+
+	@ManyToMany
+	private List<Application> applicationList;
+	/*
+	###############################
+	#                             #
+	#         Getter              #
+	#                             #
+	###############################
+	*/
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public Date getDeletedDate() {
+		return deletedDate;
+	}
+
+	public UserType getUserType() {
+		return userType;
+	}
+
+	public List<Application> getApplicationList() {
+		return applicationList;
+	}
+	/*
+	###############################
+	#                             #
+	#         Setter              #
+	#                             #
+	###############################
+	*/
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setDeletedDate(Date deletedDate) {
+		this.deletedDate = deletedDate;
+	}
+
+	public void setUserType(UserType userType) {
+		this.userType = userType;
+	}
+
+	public void setApplicationList(List<Application> applicationList) {
+		this.applicationList = applicationList;
+	}
+}

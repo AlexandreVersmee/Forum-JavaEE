@@ -1,0 +1,20 @@
+package com.orange.OSAC.services;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.orange.OSAC.entities.Ticket;
+import com.orange.OSAC.entities.UnderTypeTicket;
+import com.orange.OSAC.entities.User;
+
+public interface IUnderTypeTicketService {
+	public IUnderTypeTicket findById(Long underTypeTicketId);
+	
+	public Page<UnderTypeTicket> findAll(Pageable pageable);
+
+	public List<UnderTypeTicket> findByDeletedDateIsNull();
+	
+	public Page<UnderTypeTicket> findByDeletedDateIsNull(Pageable pageable);
+}

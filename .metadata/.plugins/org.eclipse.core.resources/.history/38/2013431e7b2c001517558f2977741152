@@ -1,0 +1,202 @@
+package com.orange.OSAC.controller;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.orange.OSAC.entities.Ticket;
+import com.orange.OSAC.entities.User;
+import com.orange.OSAC.forms.Preference;
+import com.orange.OSAC.services.IApplicationService;
+import com.orange.OSAC.services.IOrigineService;
+import com.orange.OSAC.services.ITicketService;
+import com.orange.OSAC.services.ITypeTicketService;
+import com.orange.OSAC.services.IUnderTypeTicketService;
+
+@Controller
+@RequestMapping(value="/home")
+public class HomeController
+{
+	/* Debug */
+	private final static Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	@Resource
+	ITicketService			ticketService;
+	
+	@Resource
+	IApplicationService		applicationService;
+	
+	@Resource
+	IOrigineService			origineService;
+	
+	@Resource
+	ITypeTicketService		typeTicketService;
+	
+	@Resource
+	IUnderTypeTicketService	underTypeTicketService;
+	
+	/* Static VAR */
+	static public enum Action{
+		ADDTICKET,
+		GETMETHOD,
+	};
+	
+	
+	/* Pagination */
+	static final public int		NbRowByPage = 10;
+	/*
+	###############################
+	#                             #
+	#       General Methods       #
+	#                             #
+	###############################
+	*/
+	void putPaginationInView(Pageable pageable, Page<Ticket> list, ModelMap model)
+	{
+		logger.debug("Pagesize ={} ", pageable.getPageSize());	
+		float nrOfPages = list.getTotalPages();
+		logger.debug("number of pages ="+nrOfPages,list.getTotalElements()-1+", Nbitem:"+list.getTotalPages()+", "+"currentPAge:"+list.getNumber());
+		/* Var for display the pagination */
+		model.addAttribute("NumberElementByPage", pageable.getPageSize());	
+		model.addAttribute("NumberTotalOfElement", (list.getTotalElements()-1));
+		model.addAttribute("currentPage", list.getNumber());
+	}
+	
+	void putListInview(ModelMap model)
+	{
+		/* Add application in view for add user form */
+		model.addAttribute("applicationList", applicationService.findAll());
+		/* Add Type in view for add user form */
+		model.addAttribute("typeTicketList", typeTicketService.findAll());
+		/* Add UnderType in view for add user form */
+		model.addAttribute("underTypeTicketList", underTypeTicketService.findAll());
+		/* Add Origine in view for add user form */
+		model.addAttribute("origineList", origineService.findAll());
+	}
+	
+	/* General method */
+	void putNeedStuffInView(ModelMap model, Pageable pageable, Preference pref, Action flag)
+	{
+		Page<Ticket> ticketList	= ticketService.findAll(pageable);	
+		
+		/* List all user in DB but not deleted */
+		model.addAttribute("ticketListFromDB", ticketList.getContent());
+
+//		if (flag != Action.ADDTICKET){
+			/* Var use to Add a new ticket throw "add ticket" btn */
+			model.addAttribute("addTicket", new Ticket());
+		//}		
+		/* Var Preference */
+		model.addAttribute("updatePreference", pref);
+		
+		/* add Application, Ticket Type, Under Type, Origine List in view*/	
+		putListInview(model);
+		
+		/* Add pagination in view (numbers) */
+		putPaginationInView(pageable, ticketList, model);
+	}
+	
+	/*
+	###############################
+	#                             #
+	#            GET              #
+	#                             #
+	###############################
+	*/
+	/*
+	|------------------------------|
+	|         Default view         |    
+	|------------------------------|
+	*/
+	@RequestMapping(method = RequestMethod.GET)
+	public String home(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			ModelMap model, HttpSession session, HttpServletRequest request, final RedirectAttributes redirectAttributes)
+	{
+		logger.debug("User in session [{}]", session.getAttribute("userSession").toString());
+		try
+		{User userPref		= (User) session.getAttribute("userSession");}
+		catch (java.lang.NullPointerException e)
+		{		
+			logger.debug("User not login -> no UserSession");		
+			request.getSession().setAttribute("ERROR_MESSAGE","Vous devez vous connecter avant de pouvoir utiliser l'application OSAC.");
+			return("redirect:/connexion");
+		}
+		
+		pageable			= new PageRequest(pageable.getPageNumber(), userPref.getPreference().getRowByPage());
+		
+		/* General var needed by view */
+		putNeedStuffInView(model, pageable, userPref.getPreference(), Action.GETMETHOD);
+		
+		return "home";
+	}
+	/*
+	###############################
+	#                             #
+	#           POST              #
+	#                             #
+	###############################
+	*/
+	/*
+	|------------------------------|
+	|    Update Preference form    |    
+	|------------------------------|
+	*/
+	@RequestMapping(value = "/updatePreference", method = RequestMethod.POST)
+	public String updateRowByPage(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "updatePreference") Preference preference, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+		logger.debug("Value de rowBypage {} | is deleted {}.", preference.getRowByPage(), preference.isDisplayDeleted());
+		User userPref 	= (User) session.getAttribute("userSession");
+		
+		/* Update Preference */
+		userPref.setPreference(preference);
+		session.setAttribute("userSession", userPref);
+		
+		return ("redirect:/home");
+	}
+	/*
+	|------------------------------|
+	|    Add new ticket form       |    
+	|------------------------------|
+	*/
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String addNewTicket(@PageableDefault(page=0, size=NbRowByPage) Pageable pageable,
+			@Valid @ModelAttribute(value = "addTicket") Ticket ticket, BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{
+		logger.debug("User in session [{}]", session.getAttribute("userSession").toString());
+		User userPref		= (User) session.getAttribute("userSession");	
+		pageable			= new PageRequest(pageable.getPageNumber(), userPref.getPreference().getRowByPage());
+		
+		/* General var needed by view */
+		putNeedStuffInView(model, pageable, userPref.getPreference(),  Action.ADDTICKET);
+		
+		logger.debug("Value in form = [{}]",ticket.toString());
+		
+		if (result.hasErrors()) {
+			logger.debug("ERROR ON SUBMIT - AddTicket (Number error :{})"+result.getErrorCount());
+			model.addAttribute("ERROR_MESSAGE","Le ticket n'a pas été ajouté en base de donnée, une erreur est survenue.");
+			return ("home");
+		}
+		
+		/* Save ticket in datebase */
+		ticketService.saveTicket(ticket);
+		
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","L'ajout du ticket c'est bien déroulé.");
+		return ("redirect:/home");
+	}
+}

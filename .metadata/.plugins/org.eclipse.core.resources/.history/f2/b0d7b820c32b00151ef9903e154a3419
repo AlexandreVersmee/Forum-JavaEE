@@ -1,0 +1,286 @@
+package com.orange.OSAC.entities;
+
+import javax.persistence.*;
+
+import java.io.Serializable;
+import java.sql.Date;
+import java.sql.Timestamp;
+
+import com.orange.OSAC.entities.Application;
+
+@Entity
+@Table(name="Ticket")
+public class Ticket implements Serializable {
+	/*
+	###############################
+	#                             #
+	# Constructeur / Destructeur  #
+	#                             #
+	###############################
+	*/
+	/*
+	###############################
+	#                             #
+	#         Attributs           #
+	#                             #
+	###############################
+	*/
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long		id;
+
+	@Column(name = "titre", nullable = false)
+	private String		title;
+	
+	@Column(name = "description", nullable = false, length = 65535)
+	private String		description;
+
+	@Column(name = "date_creation", nullable = false)
+	private Date		dateCreate;
+
+	@Column(name = "date_fermeture")
+	private Date		dateClose;
+
+	@Column(name = "date_derniere_modification")
+	private Date		DateLastModification;
+
+	@Column(name = "date_suppression")
+	private Date		deletedDate;
+	
+	@Column(name = "temps_realisation")
+	private Timestamp	timeDoing;
+	/*
+	###############################
+	#                             #
+	#         Relation            #
+	#                             #
+	###############################
+	*/
+	@OneToOne
+	private User user;
+
+	@OneToOne
+	private Application application;
+	
+	@OneToOne
+	private AttachedDocument attachedDocument;
+
+	@OneToOne
+	private StatutTicket ticketStatut;
+
+	@OneToOne
+	private UnderTypeTicket ticketUnderType;
+
+	@OneToOne
+	private TypeTicket ticketType;
+
+	@OneToOne
+	private Origine origine;
+	/*
+	|------------------------------|
+	|  Var not store in database   |    
+	|------------------------------|
+	*/
+	@Transient
+	private long applicationId;
+	
+	@Transient
+	private long typeTicketId;
+	
+	@Transient
+	private long underTypeTicketId;
+	
+	@Transient
+	private long origineId;
+	/*
+	###############################
+	#                             #
+	#         Getter              #
+	#                             #
+	###############################
+	*/
+	public long getId() {
+		return id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public Date getDateCreate() {
+		return dateCreate;
+	}
+
+	public Date getDateClose() {
+		return dateClose;
+	}
+
+	public Date getDateLastModification() {
+		return DateLastModification;
+	}
+
+	public Date getDeletedDate() {
+		return deletedDate;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public Application getApplication() {
+		return application;
+	}
+
+	public AttachedDocument getAttachedDocument() {
+		return attachedDocument;
+	}
+
+	public StatutTicket getTicketStatut() {
+		return ticketStatut;
+	}
+
+	public UnderTypeTicket getTicketUnderType() {
+		return ticketUnderType;
+	}
+
+	public TypeTicket getTicketType() {
+		return ticketType;
+	}
+
+	public Origine getOrigine() {
+		return origine;
+	}
+	
+	public long getApplicationId() {
+		return applicationId;
+	}
+	public long getOrigineId() {
+		return origineId;
+	}
+
+	public long getTypeTicketId() {
+		return typeTicketId;
+	}
+
+	public long getUnderTypeTicketId() {
+		return underTypeTicketId;
+	}
+
+	public Timestamp getTimeDoing() {
+		return timeDoing;
+	}
+	/*
+	###############################
+	#                             #
+	#         Setter              #
+	#                             #
+	###############################
+	*/
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public void setDateCreate(Date dateCreate) {
+		this.dateCreate = dateCreate;
+	}
+	
+	public void setDateClose(Date dateClose) {
+		this.dateClose = dateClose;
+	}
+	
+	public void setDateLastModification(Date dateLastModification) {
+		DateLastModification = dateLastModification;
+	}
+	
+	public void setDeletedDate(Date deletedDate) {
+		this.deletedDate = deletedDate;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public void setApplication(Application application) {
+		this.application = application;
+	}
+	
+	public void setAttachedDocument(AttachedDocument attachedDocument) {
+		this.attachedDocument = attachedDocument;
+	}
+
+	public void setTicketStatut(StatutTicket ticketStatut) {
+		this.ticketStatut = ticketStatut;
+	}
+	
+	public void setTicketUnderType(UnderTypeTicket ticketUnderType) {
+		this.ticketUnderType = ticketUnderType;
+	}
+	
+	public void setTicketType(TypeTicket ticketType) {
+		this.ticketType = ticketType;
+	}
+
+	public void setOrigine(Origine origine) {
+		this.origine = origine;
+	}
+
+	public void setApplicationId(long applicationId) {
+		this.applicationId = applicationId;
+	}
+
+	public void setTypeTicketId(long typeTicketId) {
+		this.typeTicketId = typeTicketId;
+	}
+
+	public void setUnderTypeTicketId(long underTypeTicketnId) {
+		this.underTypeTicketId = underTypeTicketnId;
+	}
+
+	public void setOrigineId(long origineId) {
+		this.origineId = origineId;
+	}
+
+	public void setTimeDoing(Timestamp timeDoing) {
+		this.timeDoing = timeDoing;
+	}
+	/*
+	###############################
+	#                             #
+	#           Methods           #
+	#                             #
+	###############################
+	*/
+	@Override
+	public String toString()
+	{
+		String message;
+		
+		message="Id : "+this.getId()+
+				"date last modif : " + this.getDateLastModification()+
+				"date create : " + this.getDateCreate()+
+				"date close : " + this.getDateClose()+
+				"Deleted Date: " + this.getDeletedDate()+
+				"description : " + this.getDescription()+
+				"Title : " + this.getTitle()+
+				"Ticket Statut: " + this.getTicketStatut()+
+				"ApplicationID : " + this.getApplicationId()+
+				"TypeId : " + this.getTicketType()+
+				"SousTypeID : " + this.getUnderTypeTicketId()+
+				"OrigineID : " + this.getOrigineId();
+		return (message);
+	}
+}

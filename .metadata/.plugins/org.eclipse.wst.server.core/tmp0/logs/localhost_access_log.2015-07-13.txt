@@ -1,0 +1,4 @@
+127.0.0.1 - - [13/Jul/2015:09:39:47 +0200] "GET /OSAC/WEB-INF/classes/com/orange/OSAC/entities/Ticket.java HTTP/1.1" 404 1119
+127.0.0.1 - - [13/Jul/2015:09:39:55 +0200] "GET /OSAC/connexion HTTP/1.1" 404 1033
+127.0.0.1 - - [13/Jul/2015:09:39:55 +0200] "GET /favicon.ico HTTP/1.1" 404 1027
+127.0.0.1 - - [13/Jul/2015:09:39:55 +0200] "GET /favicon.ico HTTP/1.1" 404 1027
