@@ -158,4 +158,15 @@ public class Membre {
 	#                             #
 	###############################
 	*/
+	@Override
+	public String toString()
+	{
+		String message;
+		
+		message="name : '"+this.getName()+ 
+				"' email : '"+this.getEmail()+
+				"' pseudo : '"+this.getPseudo()+
+				"' id : "+this.getId();
+		return (message);
+	}
 }
