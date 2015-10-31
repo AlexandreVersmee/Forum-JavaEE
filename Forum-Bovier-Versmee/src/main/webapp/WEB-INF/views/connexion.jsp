@@ -11,7 +11,6 @@
 					<div class="row">
 						<div class="large-8 columns">
 							<div class="row collapse">
- 								<spring:message code="cuid.ph" var="cuidPh"/>
 						 		<label><spring:message code="identifiant.lbl"/></label>
 								<div class="small-9 columns">
 							 	<form:input path="pseudo" type="text" placeholder="pseudo"/> 
@@ -26,7 +25,6 @@
 					<div class="row">
 						<div class="large-8 large-centered columns">
 							<div class="row collapse">
- 								<spring:message code="login.ph" var="passwordPh"/>
 								<label><spring:message code="password.lbl"/></label>
 								<div class="small-9 columns">
 							 	<form:input path="password" type="password" placeholder="password"/>
