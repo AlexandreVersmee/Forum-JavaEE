@@ -36,4 +36,10 @@ public class MembreService implements IMembreService
 		membre.setDateCreation(new Date());
 		membreDAO.save(membre);
 	}
+	
+	public void supprMembre(Membre membre) {
+		logger.debug("Appel de la methode supprMembre");
+		membre.setDeleted(new Date());;
+		membreDAO.save(membre);
+	}
 }

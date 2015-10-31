@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -70,15 +69,21 @@ public class ProfilController {
 			return ("profil");
 		}
 
-		/* Save ticket in database */
-		try {
+		/* Sauvgarde la modification du profil en BDD */
 			membreService.saveMembre(membre);
-		} catch (DataIntegrityViolationException e) {
-			model.addAttribute("ERROR_MESSAGE","Un membre possède déjà ce pseudo.");
-			return ("profil");
-		}
 		
 		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","La modification a bien ete effectuer.");
+		return ("redirect:/");
+	}
+	@RequestMapping(value = "/suppr", method = RequestMethod.POST)
+	public String supprMembre(@ModelAttribute(value = "supprMembre") Membre membre, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{		
+		logger.debug("Value in form = [{}]",membre.toString());
+		
+		/* Sauvgarde la suppression du profil en BDD */
+			membreService.supprMembre((Membre) session.getAttribute("membreSession"));
+		
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","La suppression a bien ete effectuer.");
 		return ("redirect:/");
 	}
 }

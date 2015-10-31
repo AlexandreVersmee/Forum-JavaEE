@@ -48,6 +48,16 @@
 					</div>
 					<form:hidden path="pseudo"/>
 			</form:form>
+			<form:form method="POST" modelAttribute="supprMembre" action="/Forum-Bovier-Versmee/profil/suppr">
+				<div class="row">
+					<div class="large-5 large-centered columns">
+						<button class="white text-center" type="submit">
+							<i class="fa fa-sign-in fa-padding"></i> Supprimer
+						</button>
+						<br/>								
+					</div>
+				</div>			
+			</form:form>
 			</div>
 		</div>
 </body:base_layout>
