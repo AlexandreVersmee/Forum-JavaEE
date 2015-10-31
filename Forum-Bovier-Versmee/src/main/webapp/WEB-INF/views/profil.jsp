@@ -5,7 +5,7 @@
 	<form>
 		<div class="large-12 columns">
 			<div class="large-8 large-centered columns">
-			<h2 class="text-center orange">Inscription</h2>
+			<h2 class="text-center orange">Profil</h2>
 				<div class="row">
 				  <div class="large-12 columns">
 				    <label>Input Label
