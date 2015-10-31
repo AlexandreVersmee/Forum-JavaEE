@@ -31,12 +31,6 @@ public class Message {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long	id;
 		
-	@Column(name = "createur", nullable = false)
-	private long	user_id;
-	
-	@Column(name = "parent", nullable = false)
-	private long	parent_id;
-	
 	@Column(name = "date_creation", nullable = false)
 	private Date	dateCreation;
 	
@@ -67,12 +61,6 @@ public class Message {
 	public long getId() {
 		return id;
 	}
-	public long getUser_id() {
-		return user_id;
-	}
-	public long getParent_id() {
-		return parent_id;
-	}
 	public Date getDateCreation() {
 		return dateCreation;
 	}
@@ -91,12 +79,6 @@ public class Message {
 	*/
 	public void setId(long id) {
 		this.id = id;
-	}
-	public void setUser_id(long user_id) {
-		this.user_id = user_id;
-	}
-	public void setParent_id(long parent_id) {
-		this.parent_id = parent_id;
 	}
 	public void setDateCreation(Date dateCreation) {
 		this.dateCreation = dateCreation;

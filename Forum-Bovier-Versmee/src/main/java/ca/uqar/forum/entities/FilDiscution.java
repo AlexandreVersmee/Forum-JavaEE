@@ -34,12 +34,6 @@ public class FilDiscution {
 	@Column(name = "titre", nullable = false, unique = true)
 	private String	title;
 	
-	@Column(name = "createur", nullable = false)
-	private long	user_id;
-	
-	@Column(name = "sujet", nullable = false)
-	private long	sujet_id;
-	
 	@Column(name = "date_creation", nullable = false)
 	private Date	dateCreation;
 	
@@ -70,12 +64,6 @@ public class FilDiscution {
 	public String getTitle() {
 		return title;
 	}
-	public long getUser_id() {
-		return user_id;
-	}
-	public long getSujet_id() {
-		return sujet_id;
-	}
 	public Date getDateCreation() {
 		return dateCreation;
 	}
@@ -94,12 +82,6 @@ public class FilDiscution {
 	}
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	public void setUser_id(long user_id) {
-		this.user_id = user_id;
-	}
-	public void setSujet_id(long sujet_id) {
-		this.sujet_id = sujet_id;
 	}
 	public void setDateCreation(Date dateCreation) {
 		this.dateCreation = dateCreation;
