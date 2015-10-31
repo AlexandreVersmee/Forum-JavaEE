@@ -55,8 +55,7 @@ public class ConnexionController {
 	###############################
 	*/
 	public void validate(Object target, Errors errors) {
- 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pseudo",
- 				"error.pseudo", "Ce champ ne peut pas Ãªtre vide.");
+ 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pseudo",	"error.pseudo", "Ce champ ne peut pas etre vide.");
      }
      
     @RequestMapping(method = RequestMethod.POST)
@@ -64,9 +63,7 @@ public class ConnexionController {
 			BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
     	/* Seek membre on database */
-//		validate(membreTemp, result);
-		
-    	logger.debug("form = "+membreTemp.getPseudo()+" et "+membreTemp.getPassword());
+    	validate(membreTemp, result);
     	
 		if (result.hasErrors())
     	{
@@ -80,14 +77,14 @@ public class ConnexionController {
     		return("connexion");
     	}
     	
-    	logger.debug("Membre trying to connect with this information : [{}, {}])",membreTemp.getPseudo(),membreTemp.getPassword());
+    	logger.debug("Membre Find in database : [{}, {}])",membreTemp.getPseudo(),membreTemp.getPassword());
     	
     	logger.debug("Membre trying to connect with this information : [{}, {}])",membreTocheck.getPseudo(),membreTocheck.getPassword());
     	
     	/* check if pseudo and Password are correct */
     	if (membreTemp.getPseudo().equals(membreTocheck.getPseudo()) && membreTemp.getPassword().equals(membreTocheck.getPassword()))
     	{
-    		redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Connexion rÃ©ussi, Bonjour "+membreTocheck.getPseudo());
+    		redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Connexion reussi, Bonjour "+membreTocheck.getPseudo());
     		
     		logger.debug("Ajout de l'utilisateur en Session");
     		session.setAttribute("membreSession", membreTocheck);
