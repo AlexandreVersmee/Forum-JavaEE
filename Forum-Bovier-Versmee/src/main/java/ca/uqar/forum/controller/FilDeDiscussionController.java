@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value="/fil")
-public class FilDeDiscusionController {
+public class FilDeDiscussionController {
 	/*
 	###############################
 	#                             #
@@ -28,7 +28,7 @@ public class FilDeDiscusionController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
-		return "filDeDiscusion";
+		return "filDeDiscussion";
 	}
 	/*
 	###############################

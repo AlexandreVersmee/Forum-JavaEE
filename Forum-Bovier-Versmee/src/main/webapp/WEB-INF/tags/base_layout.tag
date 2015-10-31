@@ -118,6 +118,7 @@
 <script src="${pageContext.request.contextPath}/resources/javascripts/vendor/jquery.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/javascripts/vendor/modernizr.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/javascripts/foundation.min.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/javascripts/filDiscussion.js" type="text/javascript"></script>
 <script type="application/javascript">
     $(document).ready(function () {
         $(document).foundation();
