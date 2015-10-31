@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping(value="/home")
-public class HomeController {
+@RequestMapping(value="/fil")
+public class FilDeDiscusionController {
 	/*
 	###############################
 	#                             #
@@ -28,7 +28,7 @@ public class HomeController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
-		return "home";
+		return "filDeDiscusion";
 	}
 	/*
 	###############################

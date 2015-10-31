@@ -6,16 +6,16 @@
   <div class="large-12 columns">
     <div class="nav-bar right">
      <ul class="button-group">
-		<li><a href="#" class="button"><i class="fa fa-home"></i> Accueil</a></li>
-		<li><a href="#" class="button"><i class="fa fa-list"></i> Listes des sujets</a></li>
+		<li><a href="/Forum-Bovier-Versmee/" class="button"><i class="fa fa-home"></i> Accueil</a></li>
+		<li><a href="/Forum-Bovier-Versmee/sujets" class="button"><i class="fa fa-list"></i> Listes des sujets</a></li>
 		<control:if test="${userSession != NULL }">
-			<li><a href="#" class="button"><i class="fa fa-user"></i> Profil</a></li>
+			<li><a href="/Forum-Bovier-Versmee/profil" class="button"><i class="fa fa-user"></i> Profil</a></li>
 		</control:if>
 		<control:if test="${userSession != NULL }">
-				<li><a href="#" class="button"><i class="fa fa-sign-out"></i> Deconnexion</a></li>
+				<li><a href="/Forum-Bovier-Versmee/deconnexion" class="button"><i class="fa fa-sign-out"></i> Deconnexion</a></li>
 		</control:if>
 		<control:if test="${userSession == NULL }">
-				<li><a href="#" class="button"><i class="fa fa-sign-in"></i> Connexion</a></li>
+				<li><a href="/Forum-Bovier-Versmee/connexion" class="button"><i class="fa fa-sign-in"></i> Connexion</a></li>
 		</control:if>
       </ul>
     </div>
