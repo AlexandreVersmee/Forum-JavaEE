@@ -11,6 +11,9 @@
 		<control:if test="${userSession != NULL }">
 			<li><a href="/Forum-Bovier-Versmee/profil" class="button"><i class="fa fa-user"></i> Profil</a></li>
 		</control:if>
+		<control:if test="${userSession == NULL }">
+				<li><a href="/Forum-Bovier-Versmee/administration" class="button"><i class="fa fa-tachometer"></i> Administration</a></li>
+		</control:if>
 		<control:if test="${userSession != NULL }">
 				<li><a href="/Forum-Bovier-Versmee/deconnexion" class="button"><i class="fa fa-sign-out"></i> Deconnexion</a></li>
 		</control:if>
