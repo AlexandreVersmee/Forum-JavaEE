@@ -80,9 +80,19 @@ public class ConnexionController {
     	logger.debug("Membre Find in database : [{}, {}])",membreTemp.getPseudo(),membreTemp.getPassword());
     	
     	logger.debug("Membre trying to connect with this information : [{}, {}])",membreTocheck.getPseudo(),membreTocheck.getPassword());
-    	
+
     	/* check if pseudo and Password are correct */
-    	if (membreTemp.getPseudo().equals(membreTocheck.getPseudo()) && membreTemp.getPassword().equals(membreTocheck.getPassword()))
+    	if (!membreTemp.getPseudo().equals(membreTocheck.getPseudo()) && !membreTemp.getPassword().equals(membreTocheck.getPassword()))
+    	{
+    		model.addAttribute("ERROR_MESSAGE","Le couple pseudo et mot de passe est incorrect.");
+    		return ("connexion");
+    	}
+    	else if (membreTocheck.getValide().equals(false))
+    	{
+    		model.addAttribute("ERROR_MESSAGE","Votre compte n'a pas encore ete valider, essayez de vous reconnecter ulterieurement.");
+    		return ("connexion");    		
+    	}
+    	else if (membreTocheck.getDeleted() == null)    		
     	{
     		redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Connexion reussi, Bonjour "+membreTocheck.getPseudo());
     		
@@ -95,7 +105,7 @@ public class ConnexionController {
     	}
     	else
     	{
-    		model.addAttribute("ERROR_MESSAGE","Le couple pseudo et mot de passe est incorrect.");
+    		model.addAttribute("ERROR_MESSAGE","Le compte auquel vous essayez d acceder a ete supprimer.");
     		return ("connexion");
     	}
 	}
