@@ -54,7 +54,7 @@
 				<div class="large-4 end text-center columns">
 				<h3 class="orange">S'inscrire</h3>
 					<br/>
-					<a href="#">
+					<a href="/Forum-Bovier-Versmee/inscription">
 						<i class="fa fa-edit fa-padding"></i> Je m'inscris
 					</a>
 				</div>

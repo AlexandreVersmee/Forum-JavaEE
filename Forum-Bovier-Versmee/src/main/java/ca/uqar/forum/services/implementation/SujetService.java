@@ -1,6 +1,7 @@
 package ca.uqar.forum.services.implementation;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -22,6 +23,16 @@ public class SujetService implements ISujetService{
 	@Resource
 	private SujetDAO	sujetDAO;
 
+	
+	public List<Sujet> findAll()
+	{
+		logger.debug("Appel de la methode findAll Sujet");
+		
+		List<Sujet>  list = sujetDAO.findAll();
+		logger.debug("FindAll Sujet result liste size = {}",list.size());
+		return list;
+	}
+	
 	public void saveSujet(Sujet newSujet)
 	{
 		Date today = new Date();

@@ -1,10 +1,13 @@
 package ca.uqar.forum.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,7 +43,11 @@ public class SujetController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
+		List<Sujet> sujetListe	= sujetService.findAll();
+		
 		model.addAttribute("addSubject", new Sujet());
+		model.addAttribute("sujetListe", sujetListe);
+		
 		return "sujet";
 	}
 	/*
@@ -53,12 +60,16 @@ public class SujetController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String updateRowByPage(@Valid @ModelAttribute(value = "addSubject") Sujet subjectToAdd, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
+		/* Define writter */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		subjectToAdd.setMembre(createur);
 				
 		/* Save sujet in database */
-		sujetService.saveSujet(subjectToAdd);
-		
-		return "sujet";
+		try {
+			sujetService.saveSujet(subjectToAdd);
+		} catch (DataIntegrityViolationException e) {
+			model.addAttribute("ERROR_MESSAGE","Un sujet possède déjà ce nom !");
+		}
+		return ("redirect:/sujets");
 	}
 }

@@ -38,11 +38,48 @@
 	#                             #
 	###############################
 	 -->
-	<div class="row">
-		<div class="large-12 text-center columns">
-			<div class="large-4 columns">Sujet 1</div>
-			<div class="large-4 columns">Sujet 2</div>
-			<div class="large-4 columns">Sujet 3</div>
-		</div>
-	</div>
+
+	 <table>
+	     <thead>
+	     <tr>
+	         <th>Titre</th>
+	         <th>Createur</th>
+	         <th width="150">Action</th>
+	     </tr>
+	     </thead>
+	     <tbody>
+	     <c:forEach var="item" items="${sujetListe}" varStatus="status">
+	         <jsp:useBean id="status" type="javax.servlet.jsp.jstl.core.LoopTagStatus"/>
+	         <c:choose>
+	             <c:when test="<%=status.getCount()%2==0%>">
+	                 <tr>
+	                     <td><c:out value="${item.title}"/></td>
+	                     <td><c:out value="${item.membre.pseudo}"/></td>
+	                     <td>
+	                         <%-- <a href="/OSAC/administration/origines/${item.id}/update#openUpdate">Modifier</a> /
+	                         <a href="/OSAC/administration/origines/${item.id}/delete#openDelete">Supprimer</a> --%>
+	                     </td>
+	                 </tr>
+	             </c:when>
+	             <c:otherwise>
+	                 <tr class="bgOrangeSoft">
+	                     <td><c:out value="${item.title}"/></td>
+	                     <td><c:out value="${item.membre.pseudo}"/></td>
+	                     <td>
+	                        <%--  <a href="/OSAC/administration/origines/${item.id}/update#openUpdate">Modifier</a> /
+	                         <a href="/OSAC/administration/origines/${item.id}/delete#openDelete">Supprimer</a> --%>
+	                     </td>
+	                 </tr>
+	             </c:otherwise>
+	         </c:choose>
+	     </c:forEach>
+	     </tbody>
+       </table>
+       <cc:if test="${empty sujetListe}">
+       <div class="row">
+           <div class="large-12 columns text-center grey">
+               <i><spring:message code="no.value.find" /></i>
+           </div>
+       </div>
+       </cc:if>
 </body:base_layout>
