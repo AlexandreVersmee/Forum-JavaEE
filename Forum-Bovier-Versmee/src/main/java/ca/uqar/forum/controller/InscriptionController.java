@@ -64,8 +64,6 @@ public class InscriptionController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String addMembre(@Valid @ModelAttribute(value = "addMembre") Membre membre, BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
-		/* General var needed by view */
-//		putNeedStuffInView(model, pageable, userPref,  Action.ADDTICKET, null);
 		
 		logger.debug("Value in form = [{}]",membre.toString());
 		
@@ -75,7 +73,7 @@ public class InscriptionController {
 			return ("inscription");
 		}
 
-		/* Save ticket in database */
+		/* création du membre dans BDD */
 		try {
 			membreService.saveMembre(membre);
 		} catch (DataIntegrityViolationException e) {
