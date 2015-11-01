@@ -1,5 +1,7 @@
 package ca.uqar.forum.services.implementation;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -26,5 +28,18 @@ public class MembreService implements IMembreService
 		Membre membreFind = membreDAO.findByPseudo(membrePseudo);
 		logger.debug("retour de FindByPseudo  = "+ membreFind.getPseudo());
 		return membreFind;
+	}
+	
+	public void saveMembre(Membre membre)
+	{
+		logger.debug("Appel de la methode createMembre");
+		membre.setDateCreation(new Date());
+		membreDAO.save(membre);
+	}
+	
+	public void supprMembre(Membre membre) {
+		logger.debug("Appel de la methode supprMembre");
+		membre.setDeleted(new Date());;
+		membreDAO.save(membre);
 	}
 }
