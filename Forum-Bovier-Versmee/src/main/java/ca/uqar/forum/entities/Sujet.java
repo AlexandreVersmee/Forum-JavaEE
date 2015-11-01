@@ -37,7 +37,7 @@ public class Sujet {
 	@Column(name = "date_creation", nullable = false)
 	private Date	dateCreation;
 	
-	@Column(name = "date_derniere_modification", nullable = false)
+	@Column(name = "date_derniere_modification")
 	private Date	dateDerniereModification;
 	
 	/*
@@ -59,6 +59,9 @@ public class Sujet {
 	public long getId() {
 		return id;
 	}
+	public Membre getMembre() {
+		return membre;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -78,6 +81,9 @@ public class Sujet {
 	public void setId(long id) {
 		this.id = id;
 	}
+	public void setMembre(Membre membre) {
+		this.membre = membre;
+	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -93,5 +99,5 @@ public class Sujet {
 	#           Methods           #
 	#                             #
 	###############################
-	*/
+	*/	
 }

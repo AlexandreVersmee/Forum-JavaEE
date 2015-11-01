@@ -22,7 +22,7 @@ public class MembreService implements IMembreService
 	private MembreDAO	membreDAO;
 	
 	public Membre findByPseudo(String membrePseudo) {
-		logger.debug("Appel de la mÃ©thode findByPseudo sur "+ membrePseudo);
+		logger.debug("Appel de la methode findByPseudo sur "+ membrePseudo);
 		Membre membreFind = membreDAO.findByPseudo(membrePseudo);
 		logger.debug("retour de FindByPseudo  = "+ membreFind.getPseudo());
 		return membreFind;

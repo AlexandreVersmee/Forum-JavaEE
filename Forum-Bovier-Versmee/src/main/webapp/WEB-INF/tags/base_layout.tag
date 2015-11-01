@@ -125,6 +125,7 @@
         var doc = document.documentElement;
         doc.setAttribute('data-useragent', navigator.userAgent);
         $(document).foundation();
+        $('.alert-box').delay(3000).fadeOut(4000);
     });
 </script>
 </body>

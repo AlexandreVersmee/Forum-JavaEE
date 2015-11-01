@@ -8,16 +8,22 @@
      <ul class="button-group">
 		<li><a href="/Forum-Bovier-Versmee/" class="button"><i class="fa fa-home"></i> Accueil</a></li>
 		<li><a href="/Forum-Bovier-Versmee/sujets" class="button"><i class="fa fa-list"></i> Listes des sujets</a></li>
-		<control:if test="${userSession != NULL }">
+		<control:if test="${membreSession != NULL }">
 			<li><a href="/Forum-Bovier-Versmee/profil" class="button"><i class="fa fa-user"></i> Profil</a></li>
 		</control:if>
-		<control:if test="${userSession == NULL }">
+		<control:if test="${membreSession != NULL }">
 				<li><a href="/Forum-Bovier-Versmee/administration" class="button"><i class="fa fa-tachometer"></i> Administration</a></li>
 		</control:if>
-		<control:if test="${userSession != NULL }">
-				<li><a href="/Forum-Bovier-Versmee/deconnexion" class="button"><i class="fa fa-sign-out"></i> Deconnexion</a></li>
+		<control:if test="${membreSession != NULL }">
+			<li>
+				<form:form method="POST" action="/Forum-Bovier-Versmee/deconnexion">
+					<button type="submit" id="deconnexion-btn">
+						<i class="fa fa-sign-out"></i> Deconnexion
+					</button>
+				</form:form>
+			</li>
 		</control:if>
-		<control:if test="${userSession == NULL }">
+		<control:if test="${membreSession == NULL }">
 				<li><a href="/Forum-Bovier-Versmee/connexion" class="button"><i class="fa fa-sign-in"></i> Connexion</a></li>
 		</control:if>
       </ul>
