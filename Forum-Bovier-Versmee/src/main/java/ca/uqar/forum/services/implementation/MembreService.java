@@ -1,6 +1,7 @@
 package ca.uqar.forum.services.implementation;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -29,6 +30,23 @@ public class MembreService implements IMembreService
 		logger.debug("retour de FindByPseudo  = "+ membreFind.getPseudo());
 		return membreFind;
 	}
+
+	public Membre findById(long parseLong)
+	{
+		logger.debug("Appel de la methode findById Membre");
+
+		Membre membre = membreDAO.findById(parseLong);
+		return membre;
+	}
+	
+	public List<Membre> findByValideIs(boolean valid)
+	{
+		logger.debug("Appel de la methode findAll Membre");
+		
+		List<Membre>  list = membreDAO.findByValideIs(valid);
+		logger.debug("FindAll Membre result liste size = {}",list.size());
+		return list;
+	}
 	
 	public void saveMembre(Membre membre)
 	{
@@ -39,7 +57,7 @@ public class MembreService implements IMembreService
 	
 	public void supprMembre(Membre membre) {
 		logger.debug("Appel de la methode supprMembre");
-		membre.setDeleted(new Date());;
+		membre.setDeleted(new Date());
 		membreDAO.save(membre);
 	}
 }

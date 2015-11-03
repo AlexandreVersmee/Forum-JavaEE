@@ -47,7 +47,7 @@
             <c:if test="${empty membreList}">
             <div class="row">
                 <div class="large-12 columns text-center grey">
-                    <i>Pas d'utilisateurs</i>
+                    <i>Pas d'utilisateurs à valider</i>
                 </div>
             </div>
             </c:if>

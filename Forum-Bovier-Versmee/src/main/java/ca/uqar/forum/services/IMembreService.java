@@ -1,5 +1,7 @@
 package ca.uqar.forum.services;
 
+import java.util.List;
+
 import ca.uqar.forum.entities.Membre;
 
 public interface IMembreService {
@@ -9,5 +11,8 @@ public interface IMembreService {
 	public void saveMembre(Membre membre);
 
 	public void supprMembre(Membre membre);
+
+	public List<Membre> findByValideIs(boolean valid);
 	
+	public Membre findById(long parseLong);
 }

@@ -1,5 +1,8 @@
 package ca.uqar.forum.controller;
 
+import java.util.List;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -12,22 +15,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ca.uqar.forum.dao.MembreDAO;
 import ca.uqar.forum.entities.Membre;
-
-import com.orange.OSAC.controller.AdministrationOrigineController;
-import com.orange.OSAC.controller.AdministrationOrigineController.Action;
-import com.orange.OSAC.entities.Origine;
-import com.orange.OSAC.entities.User;
+import ca.uqar.forum.services.IMembreService;
 
 @Controller
 @RequestMapping(value="/administration-inscriptions")
 public class AdministrationInscription {
 	/* Debug */
 	private final static Logger logger = LoggerFactory.getLogger(AdministrationInscription.class);
+
+	@Resource
+	private IMembreService	membreService;
 
 	/*
 	###############################
@@ -46,6 +50,9 @@ public class AdministrationInscription {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
+		List<Membre> liste = membreService.findByValideIs(false);
+		
+		model.addAttribute("membreList", liste);
 		return "administrationInscription";
 	}
 	/*
@@ -55,25 +62,15 @@ public class AdministrationInscription {
 	#                             #
 	###############################
 	*/
-	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
-	public String deleteOriginForm(@Valid @ModelAttribute(value="originToDelete") Origine originTemp,
-			BindingResult result, ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public String deleteOriginForm(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
+									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)
 	{
-		logger.debug("Delete NEW ORIGIN POST");
-		Membre userPref		= (Membre) session.getAttribute("userSession");
+		Membre membre = membreService.findById(Long.parseLong(idMembreToValidate));
 		
-		/* Default Methods */
-		setDefaultViewVariables(pageable, model, null, Action.DELETE, userPref.getPreference());
-					
-		if (result.hasErrors()){
-			logger.debug("ERROR ON SUBMIT - UpdateOrigin (Number error :{}), {}",result.getErrorCount(), result.getAllErrors().get(0).getDefaultMessage());
-			model.addAttribute("ERROR_MESSAGE","L'origine "+originTemp.getName()+" n'a pas Ã©tÃ© ajoutÃ© en base de donnÃ©e, une erreur est survenue.");
-			return ("administrationOrigin");
-		}
-		
-		origineService.deleteOrigin(originTemp);	
-		
-		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","L'origine "+originTemp.getName()+" a bien Ã©tÃ© supprimÃ© en base de donnÃ©e.");
-		return ("redirect:/administration/origines");		
+		logger.debug("Je suis la après findById");
+		membre.setValide(true);
+		membreService.saveMembre(membre);
+		return ("redirect:/administration-inscriptions");		
 	}
 }

@@ -76,7 +76,7 @@ public class ProfilController {
 		return ("redirect:/");
 	}
 	@RequestMapping(value = "/suppr", method = RequestMethod.POST)
-	public String supprMembre(@ModelAttribute(value = "supprMembre") Membre membre, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	public String suppressionCompte(@ModelAttribute(value = "supprMembre") Membre membre, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{		
 		logger.debug("Value in form = [{}]",membre.toString());
 		
