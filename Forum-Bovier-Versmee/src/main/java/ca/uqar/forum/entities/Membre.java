@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -68,6 +67,10 @@ public class Membre {
 	@NotEmpty
 	@Column(name = "mot_de_passe", nullable = false)
 	private String	password;
+	
+	@Column(name = "pouvoir", nullable = false)
+	private int		pouvoir = 0;
+	
 	/*
 	###############################
 	#                             #
@@ -75,8 +78,6 @@ public class Membre {
 	#                             #
 	###############################
 	*/
-	@OneToOne
-	private Type type;
 	/*
 	###############################
 	#                             #
@@ -114,6 +115,9 @@ public class Membre {
 	public String getPassword() {
 		return password;
 	}
+	public int getPouvoir() {
+		return pouvoir;
+	}
 	/*
 	###############################
 	#                             #
@@ -150,6 +154,9 @@ public class Membre {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public void setPouvoir(int pouvoir) {
+		this.pouvoir = pouvoir;
 	}
 	/*
 	###############################

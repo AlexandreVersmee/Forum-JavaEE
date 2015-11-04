@@ -65,8 +65,9 @@
 			<props>
 				<prop key="hibernate.format_sql">${hibernate.formatSql}</prop>
 				<prop key="hibernate.dialect">${jpa.dialect}</prop>
-<!-- 			    <prop key="hibernate.hbm2ddl.auto">create</prop>  NE PAS METTRE CA EN PROD :D
- -->				<prop key="hibernate.default_batch_fetch_size">8</prop>
+<!--  			    <prop key="hibernate.hbm2ddl.auto">create</prop>  NE PAS METTRE CA EN PROD :D
+ -->
+ 				<prop key="hibernate.default_batch_fetch_size">8</prop>
 				<prop key="hibernate.archive.autodetection">class</prop>
 				<prop key="hibernate.generate_statistics">true</prop>
 				<prop key="hibernate.cache.use_second_level_cache">true</prop>

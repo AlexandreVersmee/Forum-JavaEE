@@ -19,14 +19,13 @@ import ca.uqar.forum.entities.Membre;
 import ca.uqar.forum.services.IMembreService;
 
 @Controller
-@RequestMapping(value="/administration-inscriptions")
-public class AdministrationInscription {
+@RequestMapping(value="/administration-pouvoirs")
+public class AdministrationPouvoirController {
 	/* Debug */
 	private final static Logger logger = LoggerFactory.getLogger(AdministrationInscription.class);
 
 	@Resource
 	private IMembreService	membreService;
-
 	/*
 	###############################
 	#                             #
@@ -44,10 +43,10 @@ public class AdministrationInscription {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
-		List<Membre> liste = membreService.findByValideIs(false);
+		List<Membre> liste = membreService.findByValideIs(true);
 		
 		model.addAttribute("membreList", liste);
-		return "administrationInscription";
+		return "administrationPouvoir";
 	}
 	/*
 	###############################
@@ -56,15 +55,38 @@ public class AdministrationInscription {
 	#                             #
 	###############################
 	*/
-	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
-	public String deleteOriginForm(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
+	@RequestMapping(value = "utilisateur/{id}", method = RequestMethod.POST)
+	public String giveUtilisateurPouvoir(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
 									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)
 	{
 		Membre membre = membreService.findById(Long.parseLong(idMembreToValidate));
 		
 		logger.debug("Je suis la après findById");
-		membre.setValide(true);
+		membre.setPouvoir(0);
 		membreService.saveMembre(membre);
-		return ("redirect:/administration-inscriptions");		
+		return ("redirect:/administration-pouvoirs");		
 	}
+	@RequestMapping(value = "moderateur/{id}", method = RequestMethod.POST)
+	public String giveModerateurPouvoir(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
+									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)
+	{
+		Membre membre = membreService.findById(Long.parseLong(idMembreToValidate));
+		
+		logger.debug("Je suis la après findById");
+		membre.setPouvoir(1);
+		membreService.saveMembre(membre);
+		return ("redirect:/administration-pouvoirs");		
+	}
+	@RequestMapping(value = "administrateur/{id}", method = RequestMethod.POST)
+	public String giveAdministrateurPouvoir(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
+									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)
+	{
+		Membre membre = membreService.findById(Long.parseLong(idMembreToValidate));
+		
+		logger.debug("Je suis la après findById");
+		membre.setPouvoir(2);
+		membreService.saveMembre(membre);
+		return ("redirect:/administration-pouvoirs");		
+	}
+
 }
