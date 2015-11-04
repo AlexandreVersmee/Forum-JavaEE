@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="fildiscution")
-public class FilDiscution {
+public class FilDiscussion {
 	/*
 	###############################
 	#                             #
@@ -61,14 +61,20 @@ public class FilDiscution {
 	public long getId() {
 		return id;
 	}
-	public String getTitle() {
-		return title;
+	public Sujet getSujet() {
+		return sujet;
+	}
+	public Membre getMembre() {
+		return membre;
 	}
 	public Date getDateCreation() {
 		return dateCreation;
 	}
 	public Date getDateDerniereModification() {
 		return dateDerniereModification;
+	}
+	public String getTitle() {
+		return title;
 	}
 	/*
 	###############################
@@ -79,6 +85,12 @@ public class FilDiscution {
 	*/
 	public void setId(long id) {
 		this.id = id;
+	}
+	public void setSujet(Sujet sujet) {
+		this.sujet = sujet;
+	}
+	public void setMembre(Membre membre) {
+		this.membre = membre;
 	}
 	public void setTitle(String title) {
 		this.title = title;

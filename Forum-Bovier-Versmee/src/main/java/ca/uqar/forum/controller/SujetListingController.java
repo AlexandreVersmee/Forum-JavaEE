@@ -21,7 +21,7 @@ import ca.uqar.forum.services.ISujetService;
 
 @Controller
 @RequestMapping(value="/sujets")
-public class SujetController {
+public class SujetListingController {
 	
 	@Resource
 	ISujetService			sujetService;
@@ -48,7 +48,7 @@ public class SujetController {
 		model.addAttribute("addSubject", new Sujet());
 		model.addAttribute("sujetListe", sujetListe);
 		
-		return "sujet";
+		return "sujetListing";
 	}
 	/*
 	###############################
@@ -56,6 +56,11 @@ public class SujetController {
 	#           POST              #
 	#                             #
 	###############################
+	*/
+	/*
+	|------------------------------|
+	|  POST When you add Subject   |    
+	|------------------------------|
 	*/
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String updateRowByPage(@Valid @ModelAttribute(value = "addSubject") Sujet subjectToAdd, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
@@ -72,4 +77,5 @@ public class SujetController {
 		}
 		return ("redirect:/sujets");
 	}
+	
 }

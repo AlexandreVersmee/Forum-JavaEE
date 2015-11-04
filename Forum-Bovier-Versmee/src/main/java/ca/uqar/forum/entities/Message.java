@@ -50,7 +50,7 @@ public class Message {
 	private Membre membre;
 	
 	@OneToOne
-	private FilDiscution fildiscution;
+	private FilDiscussion fildiscution;
 	/*
 	###############################
 	#                             #

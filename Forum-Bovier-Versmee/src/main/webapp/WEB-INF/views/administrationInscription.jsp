@@ -1,5 +1,6 @@
 <%@taglib prefix="body" tagdir="/WEB-INF/tags" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <body:base_layout>
 <div class="row">
@@ -10,7 +11,7 @@
 				<th>id</th>
 				<th>Pseudo</th>
 				<th>Adresse email</th>
-				<th>Date de dernière connexion</th>
+				<th>Date de derniÃ¨re connexion</th>
 				<th class="text-center">Action</th>
 			</tr>
 			</thead>

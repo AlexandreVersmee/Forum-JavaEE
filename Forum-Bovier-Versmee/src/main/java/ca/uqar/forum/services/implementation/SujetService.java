@@ -42,4 +42,5 @@ public class SujetService implements ISujetService{
 		logger.debug("Save du Sujet : ["+newSujet.toString()+"]");
 		sujetDAO.save(newSujet);
 	}
+
 }

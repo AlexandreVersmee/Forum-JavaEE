@@ -18,7 +18,7 @@
 			<li>
 				<form:form method="POST" action="/Forum-Bovier-Versmee/deconnexion">
 					<button type="submit" id="deconnexion-btn">
-						<i class="fa fa-sign-out"></i> Deconnexion
+						<i class="fa fa-sign-out"></i> Déconnexion
 					</button>
 				</form:form>
 			</li>

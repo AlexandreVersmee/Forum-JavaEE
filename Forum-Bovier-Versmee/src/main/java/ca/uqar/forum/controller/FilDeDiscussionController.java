@@ -28,7 +28,7 @@ public class FilDeDiscussionController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
-		return "filDeDiscussion";
+		return "discussion";
 	}
 	/*
 	###############################

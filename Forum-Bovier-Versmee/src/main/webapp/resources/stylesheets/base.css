@@ -48,6 +48,9 @@ textarea {
   padding-top: 12px;
   padding-bottom: 14px; }
 
+table {
+  width: calc(100% - 20px); }
+
 /*
 	###############################
 	#                             #
