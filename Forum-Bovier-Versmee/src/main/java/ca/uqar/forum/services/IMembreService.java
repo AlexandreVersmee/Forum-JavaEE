@@ -15,4 +15,6 @@ public interface IMembreService {
 	public List<Membre> findByValideIs(boolean valid);
 	
 	public Membre findById(long parseLong);
+
+	public List<Membre> findByValideAndDeleted(boolean b, Object object);
 }

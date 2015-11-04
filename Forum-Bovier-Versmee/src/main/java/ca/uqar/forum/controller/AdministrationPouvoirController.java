@@ -43,7 +43,7 @@ public class AdministrationPouvoirController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
-		List<Membre> liste = membreService.findByValideIs(true);
+		List<Membre> liste = membreService.findByValideAndDeleted(true, null);
 		
 		model.addAttribute("membreList", liste);
 		return "administrationPouvoir";
