@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping(value="/fil")
-public class FilDeDiscussionController {
+@RequestMapping(value="/discussion")
+public class DiscussionController {
 	/*
 	###############################
 	#                             #
@@ -25,8 +25,13 @@ public class FilDeDiscussionController {
 	#                             #
 	###############################
 	*/
-	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	/*
+	|------------------------------|
+	|     Get all Discussion       |    
+	|------------------------------|
+	*/
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public String displayMessageOfDiscussion(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		return "discussion";
 	}

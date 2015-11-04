@@ -8,5 +8,7 @@ public interface ISujetService {
 	
 	public List<Sujet> findAll();
 	
+	public Sujet findById(Long idSubject);
+	
 	public void saveSujet(Sujet newSujet);
 }

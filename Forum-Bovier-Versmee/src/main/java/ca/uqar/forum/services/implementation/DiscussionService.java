@@ -1,6 +1,7 @@
 package ca.uqar.forum.services.implementation;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.uqar.forum.dao.DiscussionDAO;
 import ca.uqar.forum.entities.FilDiscussion;
+import ca.uqar.forum.entities.Sujet;
 import ca.uqar.forum.services.IDiscussionService;
 
 @Service
@@ -29,6 +31,17 @@ public class DiscussionService  implements IDiscussionService
 	
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	public void saveDiscussion(FilDiscussion newDiscussion)
+	{
+		Date today = new Date();
+		
+		newDiscussion.setDateCreation(today);
+		newDiscussion.setDateDerniereModification(today);
+		logger.debug("Appel de la methode saveDiscussion");
+		logger.debug("Save de la discussion : ["+newDiscussion.toString()+"]");
+		discussionDAO.save(newDiscussion);
+	}
 	
 	/*
 	###############################

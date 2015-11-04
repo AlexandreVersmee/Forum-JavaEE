@@ -14,6 +14,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ca.uqar.forum.entities.Membre;
@@ -45,6 +46,8 @@ public class ConnexionController {
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		model.addAttribute("membre", new Membre());
+		logger.debug("Referer dans GET  = [{}]",request.getHeader("Referer"));
+		session.setAttribute("referer", request.getHeader("Referer"));
 		return "connexion";
 	}
 	/*
@@ -60,7 +63,8 @@ public class ConnexionController {
      
     @RequestMapping(method = RequestMethod.POST)
 	public String logMembre(@ModelAttribute(value = "membre") Membre membreTemp,
-			BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+			BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes,
+			HttpServletRequest request)
 	{
     	/* Seek membre on database */
     	validate(membreTemp, result);
@@ -94,18 +98,27 @@ public class ConnexionController {
     	}
     	else if (membreTocheck.getDeleted() == null)    		
     	{
-    		redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Connexion reussi, Bonjour "+membreTocheck.getPseudo());
+    		redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Bonjour "+membreTocheck.getPseudo());
     		
     		logger.debug("Ajout de l'utilisateur en Session");
     		session.setAttribute("membreSession", membreTocheck);
     		
     		/* Delete error in session */
     		session.removeAttribute("ERROR_MESSAGE");
-    		return ("redirect:/");
+    		
+    		String referer = (String) session.getAttribute("referer");
+    		logger.debug("Refere DANS POST [{}]",referer);
+    		if (!referer.equals(null))
+    		{
+    			session.removeAttribute("referer");
+    			return "redirect:"+referer;
+    		}
+    		else
+    			return "redirect:/";
     	}
     	else
     	{
-    		model.addAttribute("ERROR_MESSAGE","Le compte auquel vous essayez d acceder a ete supprimer.");
+    		model.addAttribute("ERROR_MESSAGE","Le compte auquel vous essayez d'acceder a été supprimé.");
     		return ("connexion");
     	}
 	}

@@ -29,10 +29,19 @@ public class SujetService implements ISujetService{
 		logger.debug("Appel de la methode findAll Sujet");
 		
 		List<Sujet>  list = sujetDAO.findAll();
-		logger.debug("FindAll Sujet result liste size = {}",list.size());
+		if (list != null)
+			logger.debug("FindAll Sujet result liste size = {}",list.size());
 		return list;
 	}
+
+	public Sujet findById(Long idSubject)
+	{
+		logger.debug("Appel de la methode findId sur "+idSubject);
 	
+		Sujet  subject = sujetDAO.findById(idSubject);
+		return subject;
+	}
+		
 	public void saveSujet(Sujet newSujet)
 	{
 		Date today = new Date();
@@ -42,5 +51,4 @@ public class SujetService implements ISujetService{
 		logger.debug("Save du Sujet : ["+newSujet.toString()+"]");
 		sujetDAO.save(newSujet);
 	}
-
 }

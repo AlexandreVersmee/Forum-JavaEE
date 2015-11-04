@@ -44,7 +44,7 @@ public class InscriptionController {
 	###############################
 	*/
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	public String displayInscription(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		model.addAttribute("addMembre", new Membre());
 		return "inscription";

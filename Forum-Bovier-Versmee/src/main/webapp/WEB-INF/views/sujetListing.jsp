@@ -1,4 +1,5 @@
 <%@taglib prefix="body" tagdir="/WEB-INF/tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="control" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 
@@ -40,18 +41,36 @@
 	###############################
 	 -->
 	<h3 class="text-center">Liste des sujets</h3>
-	<div class="row">
-		<div class="large-12 columns">
-			<c:forEach var="item" items="${sujetListe}" varStatus="status">
-				<div class="large-3 end columns panel">
-					<p class="text-center"><a href="/Forum-Bovier-Versmee/sujet/${item.id}"><c:out value="${item.title}"/></a></p>
+	<c:forEach var="item" items="${sujetListe}" varStatus="loop">
+		<jsp:useBean id="loop" type="javax.servlet.jsp.jstl.core.LoopTagStatus" />
+		<c:if test="${loop.first}">
+			<div class="row" data-equalizer>
+		</c:if>
+		<div class="large-3 end columns panel bgOrangeSoft" data-equalizer-watch>
+			<p class="text-center"><a href="/Forum-Bovier-Versmee/sujet/${item.id}"><c:out value="${item.title}"/></a></p>
+			<c:choose>
+				<c:when test="${item.membre.deleted != NULL}">
+					<i><i class="fa fa-user"></i> - Utilisateur supprimé</i>
+				</c:when>
+				<c:otherwise>
 					<i><i class="fa fa-user"></i> - <c:out value="${item.membre.pseudo}"/></i>
-					<!-- Si l'utilisateur est une administrateur -->
-					<br/><i class="fa fa-trash" title="<spring:message code='subject.delete' />"></i>
-				</div>				
-			</c:forEach>
+				</c:otherwise>
+			</c:choose>
+			<!-- Si l'utilisateur est une administrateur -->
+			<control:if test="${membreSession.pouvoir == 2}">
+			<br/><i class="fa fa-trash" title="<spring:message code='subject.delete' />"></i>
+			</control:if>
 		</div>
-	</div>
+		<c:choose>
+			<c:when test="${loop.last}">
+				</div>
+			</c:when>
+			<c:when test="${loop.getCount()%4==0}">
+				</div>
+				<div class="row" data-equalizer>
+		</c:when>
+		</c:choose>			
+	</c:forEach>
 	<!-- Cas s'il n'y a aucun enregistrement en base -->
 	<c:if test="${empty sujetListe}">
 		<div class="row">

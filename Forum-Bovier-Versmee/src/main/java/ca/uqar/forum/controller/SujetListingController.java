@@ -67,8 +67,16 @@ public class SujetListingController {
 	{
 		/* Define writter */
 		Membre createur = (Membre) session.getAttribute("membreSession");
-		subjectToAdd.setMembre(createur);
-				
+		if (createur == null)
+		{
+			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
+			return ("redirect:/connexion");
+		}
+		else
+		{
+			subjectToAdd.setMembre(createur);
+		}		
+		
 		/* Save sujet in database */
 		try {
 			sujetService.saveSujet(subjectToAdd);
