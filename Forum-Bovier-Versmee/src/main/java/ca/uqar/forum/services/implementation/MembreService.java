@@ -46,6 +46,15 @@ public class MembreService implements IMembreService
 		logger.debug("FindAll Membre result liste size = {}",list.size());
 		return list;
 	}
+
+	public List<Membre> findByValideAndDeleted(boolean b, Object object)	
+	{
+		logger.debug("Appel de la methode findValidAndDeleted");
+		
+		List<Membre>  list = membreDAO.findByValideAndDeleted(b, object);
+		logger.debug("FindAll Membre result liste size = {}",list.size());
+		return list;
+	}
 	
 	public void saveMembre(Membre membre)
 	{
