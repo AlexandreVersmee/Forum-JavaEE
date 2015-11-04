@@ -1,5 +1,6 @@
 <%@taglib prefix="body" tagdir="/WEB-INF/tags" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="control" %>
 
 <body:base_layout>
 <div class="row">
@@ -13,8 +14,9 @@
 				<br/>Activation des profils
 			</a>
 		</div>
+		<control:if test="${membreSession.pouvoir >= 2 }">
 		<div class="large-3 columns">
-			<a href="/Forum-Bovier-Versmee/administration-messages">
+			<a href="/Forum-Bovier-Versmee/administration-pouvoirs">
 				<span class="fa-stack fa-lg fa-4x orange ">
 				  <i class="fa fa-square-o fa-stack-2x"></i>
 				  <i class="fa fa-users fa-stack-1x"></i>
@@ -22,6 +24,7 @@
 				Gerer les profils
 			</a>
 		</div>
+		</control:if>
 		<div class="large-3 columns">
 			<a href="/Forum-Bovier-Versmee/administration-messages">
 				<span class="fa-stack fa-lg fa-4x orange ">
@@ -31,7 +34,7 @@
 				Gerer les messages
 			</a>
 		</div>
-		<div class="large-3 columns">
+		<div class="large-3 columns end">
 			<a href="/Forum-Bovier-Versmee/administration-messages">
 				<span class="fa-stack fa-lg fa-4x orange ">
 				  <i class="fa fa-square-o fa-stack-2x"></i>

@@ -25,8 +25,12 @@
                                 	<td><c:out value="${item.email}"/></td>
                                 	<td><c:out value="${item.ip}"/></td>
                                 	<td>
-                                    	<a href="/Forum-Bovier-Versmee/administration-inscriptions/${item.id}">Valider</a>
-                                	</td>
+	                                	<form:form method="POST" action="/Forum-Bovier-Versmee/administration-inscriptions/${item.id}">
+    		                            	<button type="submit" value="Submit">
+												Valider
+		                                	</button>
+            	                    	</form:form>
+                                	</td>                                	
                             	</tr>
                         	</c:when>
                         	<c:otherwise>
@@ -36,8 +40,12 @@
                                 	<td><c:out value="${item.email}"/></td>
                                 	<td><c:out value="${item.ip}"/></td>
                                 	<td>
-                                    	<a href="/Forum-Bovier-Versmee/administration-inscriptions/${item.id}">Valider</a>
-                                	</td>
+	                                	<form:form method="POST" action="/Forum-Bovier-Versmee/administration-inscriptions/${item.id}">
+    		                            	<button type="submit" value="Submit">
+												Valider
+		                                	</button>
+            	                    	</form:form>
+                                	</td>                                	
                             	</tr>
                         	</c:otherwise>
                     	</c:choose>

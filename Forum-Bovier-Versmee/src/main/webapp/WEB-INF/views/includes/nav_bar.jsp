@@ -11,7 +11,7 @@
 		<control:if test="${membreSession != NULL }">
 			<li><a href="/Forum-Bovier-Versmee/profil" class="button"><i class="fa fa-user"></i> Profil</a></li>
 		</control:if>
-		<control:if test="${membreSession != NULL }">
+		<control:if test="${membreSession.pouvoir >= 1 }">
 				<li><a href="/Forum-Bovier-Versmee/administration" class="button"><i class="fa fa-tachometer"></i> Administration</a></li>
 		</control:if>
 		<control:if test="${membreSession != NULL }">
