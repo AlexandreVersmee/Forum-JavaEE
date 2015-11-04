@@ -1,6 +1,5 @@
 package ca.uqar.forum.services.implementation;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.uqar.forum.dao.DiscussionDAO;
 import ca.uqar.forum.entities.FilDiscussion;
-import ca.uqar.forum.entities.Sujet;
 import ca.uqar.forum.services.IDiscussionService;
 
 @Service
@@ -46,7 +44,7 @@ public class DiscussionService  implements IDiscussionService
 	/*
 	###############################
 	#                             #
-	#        CUSTOM QUERY         #
+	#        CUSTOM QUERY JPQL    #
 	#                             #
 	###############################
 	*/

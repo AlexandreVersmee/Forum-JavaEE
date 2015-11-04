@@ -2,12 +2,10 @@ package ca.uqar.forum.services;
 
 import java.util.List;
 
-import ca.uqar.forum.entities.FilDiscussion;
+import ca.uqar.forum.entities.Message;
 
-public interface IDiscussionService
+public interface IMessageService
 {
-	public void saveDiscussion(FilDiscussion newDiscussion);	
-	
 	/*
 	###############################
 	#                             #
@@ -15,5 +13,5 @@ public interface IDiscussionService
 	#                             #
 	###############################
 	*/
-	public List<FilDiscussion> readBySujet(Long idSujet);
+	public List<Message> readByMessage(Long idDiscussion);
 }

@@ -39,6 +39,10 @@ public class Message {
 	
 	@Column(name = "contenue", nullable = false, columnDefinition="TEXT")
 	private String	texte;
+	
+	@Column(name = "parent_id", nullable = false)
+	private Long	parentId;
+	
 	/*
 	###############################
 	#                             #
@@ -50,7 +54,7 @@ public class Message {
 	private Membre membre;
 	
 	@OneToOne
-	private FilDiscussion fildiscution;
+	private FilDiscussion fildiscussion;
 	/*
 	###############################
 	#                             #
@@ -70,6 +74,15 @@ public class Message {
 	public String getTexte() {
 		return texte;
 	}
+	public Long getParentId() {
+		return parentId;
+	}
+	public Membre getMembre() {
+		return membre;
+	}
+	public FilDiscussion getFildiscussion() {
+		return fildiscussion;
+	}
 	/*
 	###############################
 	#                             #
@@ -88,6 +101,15 @@ public class Message {
 	}
 	public void setTexte(String texte) {
 		this.texte = texte;
+	}
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
+	public void setMembre(Membre membre) {
+		this.membre = membre;
+	}
+	public void setFildiscussion(FilDiscussion fildiscussion) {
+		this.fildiscussion = fildiscussion;
 	}
 	/*
 	###############################

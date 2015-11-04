@@ -23,8 +23,8 @@ import ca.uqar.forum.services.ISujetService;
 
 @Controller
 @RequestMapping(value="/sujet")
-public class DiscussionListingController {
-
+public class DiscussionListingController
+{
 	@Resource
 	IDiscussionService			discussuionService;
 	
