@@ -57,7 +57,7 @@ public class AdministrationInscription {
 	###############################
 	*/
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
-	public String deleteOriginForm(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
+	public String inscriptionMembreForm(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
 									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)
 	{
 		Membre membre = membreService.findById(Long.parseLong(idMembreToValidate));

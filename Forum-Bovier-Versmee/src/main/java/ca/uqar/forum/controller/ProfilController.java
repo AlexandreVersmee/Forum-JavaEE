@@ -54,7 +54,7 @@ public class ProfilController {
 	###############################
 	*/
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String addMembre(@Valid @ModelAttribute(value = "modifMembre") Membre membre, BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	public String updateMembre(@Valid @ModelAttribute(value = "modifMembre") Membre membre, BindingResult result, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
 		/* General var needed by view */
 		

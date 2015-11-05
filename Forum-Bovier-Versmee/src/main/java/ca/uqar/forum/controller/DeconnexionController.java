@@ -30,7 +30,7 @@ public class DeconnexionController {
 	###############################
 	*/
     @RequestMapping(method = RequestMethod.POST)
-	public String logUser(HttpSession session, final RedirectAttributes redirectAttributes)
+	public String unlogUser(HttpSession session, final RedirectAttributes redirectAttributes)
 	{
     	logger.debug("Delete userSession variable");
     	session.removeAttribute("membreSession");
