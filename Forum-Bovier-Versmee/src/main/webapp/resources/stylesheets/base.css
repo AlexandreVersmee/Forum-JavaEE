@@ -36,6 +36,9 @@
 .text-bold {
   font-weight: bold; }
 
+.underline {
+  border-bottom: 2px solid #F16E00; }
+
 .no-btn {
   top: 0 !important;
   margin: 0 !important;

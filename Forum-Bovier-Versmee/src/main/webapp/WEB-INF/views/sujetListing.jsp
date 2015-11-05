@@ -40,7 +40,7 @@
 	#                             #
 	###############################
 	 -->
-	<h3 class="text-center">Liste des sujets</h3>
+	<h3 class="text-center"><span class="underline text-bold">Liste des sujets</span></h3>
 	<c:forEach var="item" items="${sujetListe}" varStatus="loop">
 		<jsp:useBean id="loop" type="javax.servlet.jsp.jstl.core.LoopTagStatus" />
 		<c:if test="${loop.first}">
@@ -57,8 +57,8 @@
 				</c:otherwise>
 			</c:choose>
 			<!-- Si l'utilisateur est une administrateur -->
-			<control:if test="${membreSession.pouvoir == 2}">
-			<br/><i class="fa fa-trash" title="<spring:message code='subject.delete' />"></i>
+			<control:if test="${membreSession.pouvoir == 1}">
+				<br/><i class="fa fa-trash" title="<spring:message code='subject.delete' />"></i>
 			</control:if>
 		</div>
 		<c:choose>
@@ -75,7 +75,7 @@
 	<c:if test="${empty sujetListe}">
 		<div class="row">
 		    <div class="large-12 columns text-center grey">
-		        <i><spring:message code="no.title.lbl" /></i>
+		        <i><spring:message code="no.subject.lbl" /></i>
 		    </div>
 		</div>
 	</c:if>
