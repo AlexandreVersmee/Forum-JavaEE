@@ -13,5 +13,5 @@ public interface IMessageService
 	#                             #
 	###############################
 	*/
-	public List<Message> readByMessage(Long idDiscussion);
+	public List<Message> readByFilDiscussion(Long idDiscussion);
 }

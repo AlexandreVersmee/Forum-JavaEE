@@ -15,4 +15,5 @@ public interface DiscussionDAO extends JpaRepository<FilDiscussion, Long>
 	 #                             #
 	 ###############################
 	 */
+	public FilDiscussion findById(Long idDiscussion);
 }

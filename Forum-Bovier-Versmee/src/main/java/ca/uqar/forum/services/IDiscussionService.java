@@ -6,8 +6,9 @@ import ca.uqar.forum.entities.FilDiscussion;
 
 public interface IDiscussionService
 {
-	public void saveDiscussion(FilDiscussion newDiscussion);	
+	public FilDiscussion findById(Long idDiscussion);
 	
+	public void saveDiscussion(FilDiscussion newDiscussion);
 	/*
 	###############################
 	#                             #

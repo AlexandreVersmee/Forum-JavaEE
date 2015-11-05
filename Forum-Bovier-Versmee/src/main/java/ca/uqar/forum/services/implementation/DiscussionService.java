@@ -30,6 +30,14 @@ public class DiscussionService  implements IDiscussionService
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	public FilDiscussion findById(Long idDiscussion)
+	{
+		logger.debug("Appel de la methode findById");
+		
+		FilDiscussion discussion = discussionDAO.findById(idDiscussion);
+		return (discussion);
+	}
+	
 	public void saveDiscussion(FilDiscussion newDiscussion)
 	{
 		Date today = new Date();

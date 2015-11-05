@@ -111,6 +111,7 @@ public class Message {
 	public void setFildiscussion(FilDiscussion fildiscussion) {
 		this.fildiscussion = fildiscussion;
 	}
+
 	/*
 	###############################
 	#                             #

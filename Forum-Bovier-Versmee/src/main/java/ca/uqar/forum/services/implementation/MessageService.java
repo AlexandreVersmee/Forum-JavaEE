@@ -9,13 +9,15 @@ import javax.persistence.TypedQuery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import ca.uqar.forum.dao.DiscussionDAO;
 import ca.uqar.forum.dao.MessageDAO;
-import ca.uqar.forum.entities.FilDiscussion;
 import ca.uqar.forum.entities.Message;
 import ca.uqar.forum.services.IMessageService;
 
+@Service
+@Transactional
 public class MessageService implements IMessageService
 {
 	/* Debug */
@@ -26,6 +28,7 @@ public class MessageService implements IMessageService
 	
 	@PersistenceContext
 	private EntityManager	entityManager;
+	
 	/*
 	###############################
 	#                             #
@@ -34,14 +37,14 @@ public class MessageService implements IMessageService
 	###############################
 	*/
 	@Override
-	public List<Message> readByMessage(Long idDiscussion)
+	public List<Message> readByFilDiscussion(Long idDiscussion)
 	{
-		logger.debug("Appel de la méthode readBySujetId");
+		logger.debug("Appel de la méthode readByFilDiscussion");
 
-		logger.debug("SELECT f FROM Message f WHERE f.fildiscussion_id = "+idDiscussion+" ORDER BY parent_id, date_creation" );
+		logger.debug("SELECT f FROM Message f WHERE f.fildiscussion_id = "+idDiscussion+" ORDER BY f.parent_id, f.date_creation" );
 
 		@SuppressWarnings("unchecked")
-		TypedQuery<Message> query =  (TypedQuery<Message>) entityManager.createQuery("SELECT f FROM Message f WHERE f.fildiscussion_id = "+idDiscussion+" ORDER BY parent_id, date_creation");
+		TypedQuery<Message> query =  (TypedQuery<Message>) entityManager.createQuery("SELECT m FROM Message m WHERE m.fildiscussion.id = "+idDiscussion);
 		
 		List<Message> messageListe = query.getResultList();
 		
