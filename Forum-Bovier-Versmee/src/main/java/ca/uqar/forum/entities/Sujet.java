@@ -46,7 +46,7 @@ public class Sujet {
 	#         Relation            #
 	#                             #
 	###############################
-	*/
+	*/	
 	@OneToOne
 	private Membre membre;
 	/*
