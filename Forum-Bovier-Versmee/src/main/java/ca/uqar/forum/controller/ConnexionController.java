@@ -45,7 +45,6 @@ public class ConnexionController {
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		model.addAttribute("membre", new Membre());
-		logger.debug("Referer dans GET  = [{}]",request.getHeader("Referer"));
 		session.setAttribute("referer", request.getHeader("Referer"));
 		return "connexion";
 	}
@@ -107,7 +106,7 @@ public class ConnexionController {
     		
     		String referer = (String) session.getAttribute("referer");
     		logger.debug("Refere DANS POST [{}]",referer);
-    		if (!referer.equals(null))
+    		if (referer != null && !referer.equals(null))
     		{
     			session.removeAttribute("referer");
     			return "redirect:"+referer;

@@ -40,7 +40,7 @@ public class Message {
 	@Column(name = "contenue", nullable = false, columnDefinition="TEXT")
 	private String	texte;
 	
-	@Column(name = "parent_id", nullable = false)
+	@Column(name = "parent_id")
 	private Long	parentId;
 	
 	/*
@@ -119,4 +119,17 @@ public class Message {
 	#                             #
 	###############################
 	*/
+	@Override
+	public String toString()
+	{
+		String message;
+		
+		message="id : '"+this.getId()+ 
+				"' Date création : '"+this.getDateCreation()+
+				"' date dernière modification : '"+this.getDateDerniereModification()+
+				"' menbre id createur : "+this.getMembre().getId()+
+				"' parentId : "+this.getParentId()+
+				"' content : "+this.getTexte();
+		return (message);
+	}
 }

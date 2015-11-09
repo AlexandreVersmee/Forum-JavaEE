@@ -18,9 +18,7 @@ public interface SujetDAO extends JpaRepository<Sujet, Long>
     #                             #
     ###############################
     */
-	
 	public List<Sujet> findAll();
 	
 	public Sujet findById(Long idSubject);
-
 }

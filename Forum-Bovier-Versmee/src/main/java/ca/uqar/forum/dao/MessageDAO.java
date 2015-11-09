@@ -15,4 +15,6 @@ public interface MessageDAO extends JpaRepository<Message, Long>
 	 #                             #
 	 ###############################
 	 */
+	
+	public Message findById(Long idSubject);
 }

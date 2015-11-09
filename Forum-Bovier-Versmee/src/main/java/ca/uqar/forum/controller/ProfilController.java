@@ -75,15 +75,16 @@ public class ProfilController {
 		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","La modification a bien ete effectuer.");
 		return ("redirect:/");
 	}
+	
 	@RequestMapping(value = "/suppr", method = RequestMethod.POST)
 	public String suppressionCompte(@ModelAttribute(value = "supprMembre") Membre membre, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{		
 		logger.debug("Value in form = [{}]",membre.toString());
 		
 		/* Sauvgarde la suppression du profil en BDD */
-			membreService.supprMembre((Membre) session.getAttribute("membreSession"));
-		
-		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","La suppression a bien ete effectuer.");
+		membreService.supprMembre((Membre) session.getAttribute("membreSession"));
+		session.removeAttribute("membreSession");
+		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","La suppression de votre compte a bien ete effectuer.");
 		return ("redirect:/");
 	}
 }
