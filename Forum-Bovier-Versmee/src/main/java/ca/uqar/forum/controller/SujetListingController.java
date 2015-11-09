@@ -90,6 +90,7 @@ public class SujetListingController {
 	 @RequestMapping(value = "suppression/{id}", method = RequestMethod.POST)
 		public String supprSujet(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
 				@PathVariable("id") String idSujetToDelete, HttpServletRequest request)
+		{
 			Sujet sujet = sujetService.findById(Long.parseLong(idSujetToDelete));
 		 	sujetService.delSujet(sujet);
 			return ("redirect:/sujets");
