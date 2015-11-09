@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -86,4 +87,11 @@ public class SujetListingController {
 		return ("redirect:/sujets");
 	}
 	
+	 @RequestMapping(value = "suppression/{id}", method = RequestMethod.POST)
+		public String supprSujet(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
+				@PathVariable("id") String idSujetToDelete, HttpServletRequest request)
+			Sujet sujet = sujetService.findById(Long.parseLong(idSujetToDelete));
+		 	sujetService.delSujet(sujet);
+			return ("redirect:/sujets");
+		}
 }

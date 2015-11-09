@@ -11,4 +11,6 @@ public interface ISujetService {
 	public Sujet findById(Long idSubject);
 	
 	public void saveSujet(Sujet newSujet);
+
+	public void delSujet(Sujet sujet);
 }

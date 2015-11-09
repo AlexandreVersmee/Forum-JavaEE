@@ -51,4 +51,10 @@ public class SujetService implements ISujetService{
 		logger.debug("Save du Sujet : ["+newSujet.toString()+"]");
 		sujetDAO.save(newSujet);
 	}
+
+	public void delSujet(Sujet sujet)
+	{
+		logger.debug("Appel de la methode delSujet");
+		sujetDAO.delete(sujet);
+	}
 }

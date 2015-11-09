@@ -57,8 +57,17 @@
 				</c:otherwise>
 			</c:choose>
 			<!-- Si l'utilisateur est une administrateur -->
-			<control:if test="${membreSession.pouvoir == 1}">
-				<br/><i class="fa fa-trash" title="<spring:message code='subject.delete' />"></i>
+			<control:if test="${membreSession.pouvoir >= 1}">
+					<form:form method="POST" action="/Forum-Bovier-Versmee/sujets/suppression/${item.id}">
+						<div class="row">
+							<div class="large-5">
+								<button class="white text-center" type="submit">
+									<br/><i class="fa fa-trash" title="<spring:message code='subject.delete' />"></i>
+								</button>
+								<br/>								
+							</div>
+						</div>
+					</form:form>					
 			</control:if>
 		</div>
 		<c:choose>
