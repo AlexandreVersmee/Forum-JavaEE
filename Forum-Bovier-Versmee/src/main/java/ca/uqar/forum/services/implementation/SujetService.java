@@ -22,7 +22,6 @@ public class SujetService implements ISujetService{
 
 	@Resource
 	private SujetDAO	sujetDAO;
-
 	
 	public List<Sujet> findAll()
 	{
