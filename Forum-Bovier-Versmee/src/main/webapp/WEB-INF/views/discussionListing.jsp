@@ -13,6 +13,7 @@
 	 -->
 	<div class="row">
 		<div class="large-12 text-center columns">
+		<!-- /${idSujetParent} -->
 			<form:form method="POST" modelAttribute="addFilDiscussion" action="/Forum-Bovier-Versmee/sujet/add/${idSujetParent}" >
 			<div class="row">
 			  <div class="large-6 large-centered columns">

@@ -1,3 +1,0 @@
-#Tomcat publish data
-#Mon Jul 20 14:09:30 CEST 2015
-org.eclipse.jst.j2ee.server\:/binary\:C\:\\Users\\FZVZ7450\\.m2\\repository\\org\\springframework\\spring-web\\3.2.5.RELEASE\\spring-web-3.2.5.RELEASE.jar=WEB-INF/lib/spring-web-3.2.5.RELEASE.jar

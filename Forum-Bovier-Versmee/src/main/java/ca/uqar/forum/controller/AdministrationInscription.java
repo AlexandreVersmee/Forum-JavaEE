@@ -1,5 +1,6 @@
 package ca.uqar.forum.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -44,7 +45,7 @@ public class AdministrationInscription {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
-		List<Membre> liste = membreService.findByValideIs(false);
+		List<Membre> liste = membreService.findByValideIsNull();
 		
 		model.addAttribute("membreList", liste);
 		return "administrationInscription";
@@ -61,9 +62,10 @@ public class AdministrationInscription {
 									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)
 	{
 		Membre membre = membreService.findById(Long.parseLong(idMembreToValidate));
+		Date today = new Date();
 		
 		logger.debug("Je suis la après findById");
-		membre.setValide(true);
+		membre.setValide(today);
 		membreService.saveMembre(membre);
 		return ("redirect:/administration-inscriptions");		
 	}

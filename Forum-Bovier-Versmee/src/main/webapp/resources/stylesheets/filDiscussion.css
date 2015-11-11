@@ -2,7 +2,9 @@
   background-color: #FBE5D3; }
 
 .comment-row {
-  display: none; }
+  display: none;
+  margin-bottom: 30px !important;
+  margin-left: 30px !important; }
 
 .main-answer {
   padding-bottom: 15px; }

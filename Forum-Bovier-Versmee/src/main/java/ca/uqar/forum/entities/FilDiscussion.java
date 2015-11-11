@@ -1,6 +1,7 @@
 package ca.uqar.forum.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,11 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="fildiscution")
+@Table(name="fildiscussion")
 public class FilDiscussion {
 	/*
 	###############################
@@ -35,6 +39,8 @@ public class FilDiscussion {
 	@Column(name = "titre", nullable = false, unique = true)
 	private String	title;
 	
+//	cascade="all,delete-orphan
+	
 	@Column(name = "date_creation", nullable = false)
 	private Date	dateCreation;
 	
@@ -47,9 +53,13 @@ public class FilDiscussion {
 	#                             #
 	###############################
 	*/
-	@OneToOne(cascade = {CascadeType.ALL}, orphanRemoval=true)
+	@ManyToOne
+	@JoinColumn(name="sujet_id")
 	private Sujet sujet;
 	
+	@OneToMany(mappedBy="fildiscussion", cascade = CascadeType.REMOVE, orphanRemoval=true)
+	private Set<Message> message;
+
 	@OneToOne
 	private Membre membre;
 	/*
@@ -109,4 +119,17 @@ public class FilDiscussion {
 	#                             #
 	###############################
 	*/	
+	@Override
+	public String toString()
+	{
+		String message;
+		
+		message="id : '"+this.getId()+ 
+				"' Date création : '"+this.getDateCreation()+
+				"' date dernière modification : '"+this.getDateDerniereModification()+
+				"' menbre id createur : "+this.getMembre().getId()+
+				"' parentId : "+this.getSujet().getId()+
+				"' title : "+this.getTitle();
+		return (message);
+	}
 }

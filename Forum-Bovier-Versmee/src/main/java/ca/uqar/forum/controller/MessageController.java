@@ -107,8 +107,6 @@ public class MessageController
 	public String answerMessage(@PathVariable("id") String idParent, @PathVariable("discussionId") String idDiscussion,
 			@Valid @ModelAttribute(value = "answerMessage") Message answerToAdd, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
-		logger.debug("Ajout dune reponse !");
-		logger.debug("Message = "+answerToAdd.getId());
 		Message answer = new Message();
 		
 		answer.setTexte(answerToAdd.getTexte());
@@ -125,17 +123,18 @@ public class MessageController
 	}
 	/*
 	|------------------------------|
-	| POST When you add Discussion |    
+	| POST When you add message    |    
 	|------------------------------|
 	*/
 	@RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
-	public String addNewMessage(@PathVariable("id") String idDiscussion, @Valid @ModelAttribute(value = "addMessage") Message messageToAdd, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	public String addNewMessage(@PathVariable("id") String idDiscussion, @Valid @ModelAttribute(value = "addMessage") Message form, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
-		logger.debug("AJOUT DUN MESSAGE");
+		Message messageToAdd = new Message();
+		messageToAdd.setTexte(form.getTexte());
+		
 		/* Define writter */
 		Membre createur = (Membre) session.getAttribute("membreSession");
-		if (createur == null)
-		{
+		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
 			return ("redirect:/connexion");
 		}	
@@ -172,21 +171,15 @@ public class MessageController
 	|------------------------------|
 	*/
 	@RequestMapping(value = "{discussionId}/delete/{id}", method = RequestMethod.POST)
-	public String deleteMessage(@PathVariable("id") String idParent, @PathVariable("discussionId") String idDiscussion,
-			@Valid @ModelAttribute(value = "answerMessage") Message answerToAdd, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
-	{
-		Message answer = new Message();
-				
+	public String deleteMessage(@PathVariable("id") String idParent, @PathVariable("discussionId") String idDiscussion, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	{			
 		/* Define writter */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
 			return ("redirect:/connexion");
 		}		
-		answer.setTexte(answerToAdd.getTexte());
 		messageService.deleteMessage(idParent);
 		return "redirect:/discussion/"+idDiscussion;
 	}
-	
-
 }

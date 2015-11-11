@@ -2,13 +2,18 @@ package ca.uqar.forum.entities;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="message")
@@ -37,6 +42,7 @@ public class Message {
 	@Column(name = "date_derniere_modification", nullable = false)
 	private Date	dateDerniereModification;
 	
+	@NotEmpty
 	@Column(name = "contenue", nullable = false, columnDefinition="TEXT")
 	private String	texte;
 	
@@ -52,8 +58,9 @@ public class Message {
 	*/
 	@OneToOne
 	private Membre membre;
-	
-	@OneToOne
+		
+	@ManyToOne(optional = false)
+	@JoinColumn(name="fildiscussion_id")
 	private FilDiscussion fildiscussion;
 	/*
 	###############################

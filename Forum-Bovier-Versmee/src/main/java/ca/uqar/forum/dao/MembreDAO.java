@@ -18,9 +18,9 @@ public interface MembreDAO extends JpaRepository<Membre, Long>{
     */
 	public Membre findByPseudo(String membrePseudo);
 
-	public List<Membre> findByValideIs(boolean valid);
+	public List<Membre> findByValideIsNull();
 	
 	public Membre findById(long parseLong);
 	
-	public List<Membre> findByValideAndDeleted(boolean b, Object object);
+	public List<Membre> findByValideIsNotNullAndDeleted(Object object);
 }

@@ -57,8 +57,8 @@ public class Membre {
 	@Column(name = "date_derniere_authentification")
 	private Date	dateDerniereAuthentification = null;
 	
-	@Column(name = "validation", nullable = false)
-	private Boolean	valide = false;
+	@Column(name = "validation")
+	private Date	valide = null;
 	
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "supprimer")
@@ -106,7 +106,7 @@ public class Membre {
 	public Date getDateDerniereAuthentification() {
 		return dateDerniereAuthentification;
 	}
-	public Boolean getValide() {
+	public Date getValide() {
 		return valide;
 	}
 	public Date getDeleted() {
@@ -146,7 +146,7 @@ public class Membre {
 	public void setDateDerniereAuthentification(Date dateDerniereAuthentification) {
 		this.dateDerniereAuthentification = dateDerniereAuthentification;
 	}
-	public void setValide(Boolean valide) {
+	public void setValide(Date valide) {
 		this.valide = valide;
 	}
 	public void setDeleted(Date deleted) {

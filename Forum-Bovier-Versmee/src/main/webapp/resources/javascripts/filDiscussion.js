@@ -16,9 +16,11 @@ $('.hideEdit').on("click", function(){
 
 /* Reopen popup */
 var url = window.location.href;
-var $id = url.substring(window.location.href.lastIndexOf('/') + 1);
-if ($id > 0 && url.match("message") != -1)
+var id = url.substring(window.location.href.lastIndexOf('/') + 1);
+var ret = url.match("message");
+console.log("ret = "+ret);
+if (id > 0 && ret != null)
 {
-	$('#edit-row'+$id).toggle();
+	$('#edit-row'+id).toggle();
 }
 

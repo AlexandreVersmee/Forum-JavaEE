@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,6 +27,9 @@ import ca.uqar.forum.services.ISujetService;
 @RequestMapping(value="/sujet")
 public class DiscussionListingController
 {
+	/* Debug */
+	private final static Logger logger = LoggerFactory.getLogger(DiscussionListingController.class);
+	
 	@Resource
 	IDiscussionService			discussuionService;
 	
@@ -73,30 +78,32 @@ public class DiscussionListingController
 	|------------------------------|
 	*/
 	@RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
-	public String addNewDiscussion(@PathVariable("id") String idSubjectParent, @Valid @ModelAttribute(value = "addFilDiscussion") FilDiscussion discussionToAdd, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
+	public String addNewDiscussion(@Valid @ModelAttribute(value = "addFilDiscussion") FilDiscussion form,
+			@PathVariable("id") String idSubject, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
-		/* Define writter */
+		FilDiscussion discussionToAdd = new FilDiscussion();
+		discussionToAdd.setTitle(form.getTitle());
+		
+		/* Set writer */
 		Membre createur = (Membre) session.getAttribute("membreSession");
-		if (createur == null)
-		{
+		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
 			return ("redirect:/connexion");
-		}
-		else
-		{
+		}else{
 			discussionToAdd.setMembre(createur);
 		}
 		
-		/* Seek subject parent of disussion*/
-		Sujet subjectParent =  sujetService.findById(Long.parseLong(idSubjectParent));
+		/* Seek subject parent of discussion*/
+		Sujet subjectParent =  sujetService.findById(Long.parseLong(idSubject));
 		discussionToAdd.setSujet(subjectParent);
 		
-		/* Save sujet in database */
+		logger.debug("NewFil = "+discussionToAdd.toString());
+		/* Save subject in database */
 		try {
 			discussuionService.saveDiscussion(discussionToAdd);
 		} catch (DataIntegrityViolationException e) {
 			model.addAttribute("ERROR_MESSAGE","Une discussion possède déjà ce nom !");
 		}
-		return ("redirect:/sujet/"+idSubjectParent);
+		return "redirect:/sujet/"+idSubject;
 	}
 }

@@ -38,28 +38,39 @@ public class MembreService implements IMembreService
 		return membre;
 	}
 	
-	public List<Membre> findByValideIs(boolean valid)
+	public List<Membre> findByValideIsNull()
 	{
 		logger.debug("Appel de la methode findAll Membre");
 		
-		List<Membre>  list = membreDAO.findByValideIs(valid);
+		List<Membre>  list = membreDAO.findByValideIsNull();
 		logger.debug("FindAll Membre result liste size = {}",list.size());
 		return list;
 	}
 
-	public List<Membre> findByValideAndDeleted(boolean b, Object object)	
+	public List<Membre> findByValideIsNotNullAndDeleted(Object object)	
 	{
 		logger.debug("Appel de la methode findValidAndDeleted");
 		
-		List<Membre>  list = membreDAO.findByValideAndDeleted(b, object);
+		List<Membre>  list = membreDAO.findByValideIsNotNullAndDeleted(object);
 		logger.debug("FindAll Membre result liste size = {}",list.size());
 		return list;
 	}
 	
 	public void saveMembre(Membre membre)
 	{
-		logger.debug("Appel de la methode createMembre");
-		membre.setDateCreation(new Date());
+		Date today = new Date();
+		
+		logger.debug("Appel de la methode saveMembre");
+		membre.setDateCreation(today);
+		membreDAO.save(membre);
+	}
+
+	public void updateMembre(Membre membre)
+	{
+		Date today = new Date();
+		
+		logger.debug("Appel de la methode updateMembre");
+		membre.setDateDerniereAuthentification(today);
 		membreDAO.save(membre);
 	}
 	
@@ -68,4 +79,5 @@ public class MembreService implements IMembreService
 		membre.setDeleted(new Date());
 		membreDAO.save(membre);
 	}
+
 }

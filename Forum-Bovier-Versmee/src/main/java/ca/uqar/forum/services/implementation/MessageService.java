@@ -39,6 +39,13 @@ public class MessageService implements IMessageService
 	@PersistenceContext
 	private EntityManager	entityManager;
 	
+	
+	public List<Message> findByAll()
+	{
+		logger.debug("Appel de la méthode findByAll");	
+		return messageDAO.findAll();
+	}
+	
 	public Message findById(Long id)
 	{
 		logger.debug("Appel de la méthode findById");
@@ -96,10 +103,11 @@ public class MessageService implements IMessageService
 	
 	public void deleteMessage(String idParent)
 	{
-		logger.debug("Appel de la méthode deleteMessage");
+		logger.debug("Appel de la méthode deleteMessage sur id = "+idParent);
 		
 		/* Find Message */
 		Message  messageToDelete = messageDAO.findById(Long.parseUnsignedLong(idParent));
+		logger.debug("Message = "+messageToDelete.toString());
 		messageDAO.delete(messageToDelete);
 	}
 	/*

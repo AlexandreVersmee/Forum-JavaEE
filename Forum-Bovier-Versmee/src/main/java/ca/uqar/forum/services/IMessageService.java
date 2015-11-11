@@ -7,6 +7,8 @@ import ca.uqar.forum.entities.Message;
 
 public interface IMessageService
 {
+	public List<Message> findByAll();
+	
 	public Message findById(Long id);
 	
 	public void saveMessage(Message messageToSave, String idDiscussion, Membre createur);

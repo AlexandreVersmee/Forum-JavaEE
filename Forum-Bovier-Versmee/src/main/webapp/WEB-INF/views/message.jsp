@@ -24,7 +24,7 @@
 									</control:if>
 									<control:if test="${membreSession.pouvoir > 1}">
 										 <li><a href="/Forum-Bovier-Versmee/discussion/${discussion.id}/message/${item.id}" title="Modifier" class="edit-comment fa-padding"><i class="fa fa-edit"></i></a></li>
-										<li><a href="#" data-reveal-id="myDeleteModal${item.id}"><i class="fa fa-trash"></i></a>	</li>
+										<li><a href="#" data-reveal-id="myDeleteModal${item.id}"><i class="fa fa-trash"></i></a></li>
 									</control:if>
 								</ul>
 							</div>
@@ -32,37 +32,37 @@
 					</div>					
 					<div id="comment-row${item.id}" class="row comment-row">
 						<div class="large-12 columns">
-							<spring:message code="enter.message.ph" var="messagePh"/>
+							<spring:message code="enter.answer.ph" var="answerPh"/>
 							<form:form method="POST" modelAttribute="answerMessage" action="/Forum-Bovier-Versmee/discussion/${discussion.id}/answer/${item.parentId}" >
 								<div class="row">
 									<div class="large-12 columns">
-										<form:textarea path="texte" type="text" placeholder="${messagePh}"/>
+										<form:input path="texte" type="text" placeholder="${answerPh}"/>
 		 		 						<form:errors path="texte" cssClass="error"/>
 									</div>
 								</div>
 								<div class="row">
 									<div class="large-12 columns">
-										<button class="hideComment${item.id} small">Masquer</button>
-										<button class="small right" type="submit"><spring:message code="validate" /></button>
+										<button class="small" type="submit"><spring:message code="validate" /></button>
+										<button class="hideComment${item.id} small right"><spring:message code="cancel" /></button>
 									</div>
 								</div>
 							</form:form>
 						</div>
 					</div>
-					<div id="edit-row${item.id}" class="row  comment-row">
+					<div id="edit-row${item.id}" class="row comment-row">
 						<div class="large-12 columns">
-							<spring:message code="enter.message.ph" var="messagePh"/>
+							<spring:message code="edit.message.ph" var="editPh"/>
 							<form:form method="POST" modelAttribute="editMessage" action="/Forum-Bovier-Versmee/discussion/${discussion.id}/edit/${item.id}" >
 								<div class="row">
 									<div class="large-12 columns">
-										<form:textarea path="texte" type="text" placeholder="${messagePh}"/>
+										<form:input path="texte" type="text" placeholder="${editPh}"/>
 		 		 						<form:errors path="texte" cssClass="error"/>
 									</div>
 								</div>
 								<div class="row">
 									<div class="large-12 columns">
-										<button class="hideEdit${item.id} small">Masquer</button>
-										<button class="small right" type="submit"><spring:message code="validate" /></button>
+										<button class="small" type="submit"><spring:message code="validate" /></button>
+										<button class="hideEdit${item.id} small right"><spring:message code="cancel" /></button>
 									</div>
 								</div>
 							</form:form>
@@ -82,43 +82,43 @@
 							</control:if>
 							<control:if test="${membreSession.pouvoir > 1}">
 								<li><a href="/Forum-Bovier-Versmee/discussion/${discussion.id}/message/${item.id}" title="Modifier" class="edit-comment fa-padding"><i class="fa fa-edit"></i></a></li>
-								<li><a href="#" class="fa-padding" title="Supprimer"><i class="fa fa-trash"></i> </a></li>
+								<li><a href="#" data-reveal-id="myDeleteModal${item.id}"><i class="fa fa-trash"></i></a>	</li>
 							</control:if>
 						</ul>
 					</div>
-					<div id="comment-row${item.id}" class="row comment-row">
+										<div id="comment-row${item.id}" class="row comment-row">
 						<div class="large-12 columns">
-							<spring:message code="enter.message.ph" var="messagePh"/>
+							<spring:message code="enter.answer.ph" var="answerPh"/>
 							<form:form method="POST" modelAttribute="answerMessage" action="/Forum-Bovier-Versmee/discussion/${discussion.id}/answer/${item.parentId}" >
 								<div class="row">
 									<div class="large-12 columns">
-										<form:textarea path="texte" type="text" placeholder="${messagePh}"/>
+										<form:input path="texte" type="text" placeholder="${answerPh}"/>
 		 		 						<form:errors path="texte" cssClass="error"/>
 									</div>
 								</div>
 								<div class="row">
 									<div class="large-12 columns">
-										<button class="hideComment${item.id} small">Masquer</button>
-										<button class="small right" type="submit"><spring:message code="validate" /></button>
+										<button class="small" type="submit"><spring:message code="validate" /></button>
+										<button class="hideComment${item.id} small right"><spring:message code="cancel" /></button>
 									</div>
 								</div>
 							</form:form>
 						</div>
 					</div>
-					<div id="edit-row${item.id}" class="row  comment-row">
+					<div id="edit-row${item.id}" class="row comment-row">
 						<div class="large-12 columns">
-							<spring:message code="enter.message.ph" var="messagePh"/>
+							<spring:message code="edit.message.ph" var="editPh"/>
 							<form:form method="POST" modelAttribute="editMessage" action="/Forum-Bovier-Versmee/discussion/${discussion.id}/edit/${item.id}" >
 								<div class="row">
 									<div class="large-12 columns">
-										<form:textarea path="texte" type="text" placeholder="${messagePh}"/>
+										<form:input path="texte" type="text" placeholder="${editPh}"/>
 		 		 						<form:errors path="texte" cssClass="error"/>
 									</div>
 								</div>
 								<div class="row">
 									<div class="large-12 columns">
-										<button class="hideEdit${item.id} small">Masquer</button>
-										<button class="small right" type="submit"><spring:message code="validate" /></button>
+										<button class="small" type="submit"><spring:message code="validate" /></button>
+										<button class="hideEdit${item.id} small right"><spring:message code="cancel" /></button>
 									</div>
 								</div>
 							</form:form>

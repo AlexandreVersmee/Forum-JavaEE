@@ -11,7 +11,7 @@
 				<th>Nom</th>
 				<th>Pseudo</th>
 				<th>Adresse email</th>
-				<th>Date de dernière connexion</th>
+				<th>Date inscription</th>
 				<th>Ip</th>
 
 				<th class="text-center">Action</th>
@@ -26,26 +26,28 @@
                                 	<td><c:out value="${item.name}"/></td>
                                 	<td><c:out value="${item.pseudo}"/></td>
                                 	<td><c:out value="${item.email}"/></td>
+                                	<td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${item.dateCreation}" /></td>
                                 	<td><c:out value="${item.ip}"/></td>
-                                	<td>
+                                	<td class="text-center">
 	                                	<form:form method="POST" action="/Forum-Bovier-Versmee/administration-inscriptions/${item.id}">
-    		                            	<button type="submit" value="Submit">
-												Valider
+    		                            	<button type="submit" value="Submit" class="small">
+												<spring:message code="validate" />
 		                                	</button>
             	                    	</form:form>
                                 	</td>                                	
                             	</tr>
                         	</c:when>
                         	<c:otherwise>
-                            	<tr>
+                            	<tr class="bgOrangeSoft">
                                 	<td><c:out value="${item.name}"/></td>
                                 	<td><c:out value="${item.pseudo}"/></td>
                                 	<td><c:out value="${item.email}"/></td>
+                                	<td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${item.dateCreation}" /></td>
                                 	<td><c:out value="${item.ip}"/></td>
-                                	<td>
+                                	<td class="text-center">
 	                                	<form:form method="POST" action="/Forum-Bovier-Versmee/administration-inscriptions/${item.id}">
-    		                            	<button type="submit" value="Submit">
-												Valider
+    		                            	<button type="submit" value="Submit" class="small">
+												<spring:message code="validate" />
 		                                	</button>
             	                    	</form:form>
                                 	</td>                                	
@@ -58,7 +60,7 @@
             <c:if test="${empty membreList}">
             <div class="row">
                 <div class="large-12 columns text-center grey">
-                    <i>Pas d'utilisateurs � valider</i>
+                    <i>Pas d'utilisateurs a valider</i>
                 </div>
             </div>
             </c:if>

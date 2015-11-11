@@ -43,7 +43,7 @@ public class AdministrationPouvoirController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
-		List<Membre> liste = membreService.findByValideAndDeleted(true, null);
+		List<Membre> liste = membreService.findByValideIsNotNullAndDeleted(null);
 		
 		model.addAttribute("membreList", liste);
 		return "administrationPouvoir";
@@ -55,6 +55,7 @@ public class AdministrationPouvoirController {
 	#                             #
 	###############################
 	*/
+	
 	@RequestMapping(value = "utilisateur/{id}", method = RequestMethod.POST)
 	public String giveUtilisateurPouvoir(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
 									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)
@@ -66,6 +67,7 @@ public class AdministrationPouvoirController {
 		membreService.saveMembre(membre);
 		return ("redirect:/administration-pouvoirs");		
 	}
+	
 	@RequestMapping(value = "moderateur/{id}", method = RequestMethod.POST)
 	public String giveModerateurPouvoir(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
 									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)
@@ -77,6 +79,7 @@ public class AdministrationPouvoirController {
 		membreService.saveMembre(membre);
 		return ("redirect:/administration-pouvoirs");		
 	}
+	
 	@RequestMapping(value = "administrateur/{id}", method = RequestMethod.POST)
 	public String giveAdministrateurPouvoir(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
 									@PathVariable("id") String idMembreToValidate, HttpServletRequest request)

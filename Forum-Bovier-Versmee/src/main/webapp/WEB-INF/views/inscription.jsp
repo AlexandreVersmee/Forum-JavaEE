@@ -10,7 +10,7 @@
 				<div class="row">
 				  <div class="large-4 columns">
 				    <label>Name
-				      <form:input path="name" type="text" placeholder="nom"/>
+				      <form:input path="name" type="text" placeholder="nom" tabindex="1"/>
 					  <form:errors path="name" cssClass="error"></form:errors>
 				    </label>
 				  </div>
@@ -18,7 +18,7 @@
 				<div class="row">
 				  <div class="large-4 columns">
 				    <label>Pseudo
-				      <form:input path="pseudo" type="text" placeholder="pseudo"/>
+				      <form:input path="pseudo" type="text" placeholder="pseudo" tabindex="2"/>
 					  <form:errors path="pseudo" cssClass="error"></form:errors>
 				    </label>
 				  </div>
@@ -26,7 +26,7 @@
 				<div class="row">
 				  <div class="large-4 columns">
 				    <label>Mail
-				      <form:input path="email" type="text" placeholder="mail"/>
+				      <form:input path="email" type="text" placeholder="mail" tabindex="3"/>
 					  <form:errors path="email" cssClass="error"></form:errors>
 				    </label>
 				  </div>
@@ -34,7 +34,7 @@
 				<div class="row">
 				  <div class="large-4 columns">
 				    <label>Password
-				      <form:input path="password" type="password" placeholder="password"/>
+				      <form:input path="password" type="password" placeholder="password" tabindex="4"/>
 					  <form:errors path="password" cssClass="error"></form:errors>
 				    </label>
 				  </div>
@@ -42,7 +42,7 @@
 				<div class="row">
 				  <div class="large-4 columns">
 				    <label>IP
-				      <form:input path="ip" type="text" placeholder="adresse ip"/>
+				      <form:input path="ip" type="text" placeholder="adresse ip" tabindex="5"/>
 					  <form:errors path="ip" cssClass="error"></form:errors>
 				    </label>
 				  </div>

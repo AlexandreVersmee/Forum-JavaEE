@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,IACA;EACE,WAAW,EAAE,IAAI",
-"sources": ["scss/administration.scss"],
-"names": [],
-"file": "administration.css"
-}

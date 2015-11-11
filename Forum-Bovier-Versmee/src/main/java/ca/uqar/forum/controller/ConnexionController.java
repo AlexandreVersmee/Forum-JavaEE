@@ -1,5 +1,7 @@
 package ca.uqar.forum.controller;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -89,13 +91,19 @@ public class ConnexionController {
     		model.addAttribute("ERROR_MESSAGE","Le couple pseudo et mot de passe est incorrect.");
     		return ("connexion");
     	}
-    	else if (membreTocheck.getValide().equals(false))
+    	else if (membreTocheck.getValide() == null)
     	{
     		model.addAttribute("ERROR_MESSAGE","Votre compte n'a pas encore ete valider, essayez de vous reconnecter ulterieurement.");
     		return ("connexion");    		
     	}
     	else if (membreTocheck.getDeleted() == null)    		
     	{
+    		Date today = new Date();
+    		
+    		membreTocheck.setDateDerniereAuthentification(today);
+    		/* Update dateDerniereAuthentification */    		
+    		membreService.updateMembre(membreTocheck);
+    		
     		redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Bonjour "+membreTocheck.getPseudo());
     		
     		logger.debug("Ajout de l'utilisateur en Session");

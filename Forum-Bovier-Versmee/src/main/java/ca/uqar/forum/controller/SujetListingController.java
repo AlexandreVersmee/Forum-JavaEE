@@ -68,13 +68,10 @@ public class SujetListingController {
 	{
 		/* Define writter */
 		Membre createur = (Membre) session.getAttribute("membreSession");
-		if (createur == null)
-		{
+		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
 			return ("redirect:/connexion");
-		}
-		else
-		{
+		}else{
 			subjectToAdd.setMembre(createur);
 		}		
 		
@@ -86,13 +83,18 @@ public class SujetListingController {
 		}
 		return ("redirect:/sujets");
 	}
-	
+	/*
+	|---------------------------------|
+	|  POST When you delete Subject   |    
+	|---------------------------------|
+	*/
 	 @RequestMapping(value = "suppression/{id}", method = RequestMethod.POST)
 		public String supprSujet(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
 				@PathVariable("id") String idSujetToDelete, HttpServletRequest request)
 		{
 			Sujet sujet = sujetService.findById(Long.parseLong(idSujetToDelete));
 		 	sujetService.delSujet(sujet);
+		 	redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","Le sujet "+sujet.getTitle()+" a bien été supprimé.");
 			return ("redirect:/sujets");
 		}
 }

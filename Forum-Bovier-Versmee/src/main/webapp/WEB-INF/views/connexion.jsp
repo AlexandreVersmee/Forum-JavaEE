@@ -16,7 +16,7 @@
 	 								<spring:message code="pseudo.ph" var="pseudoPh"/>
 							 		<label><spring:message code="pseudo.lbl"/></label>
 									<div class="small-9 columns">
-								 	<form:input path="pseudo" type="text" placeholder="${pseudoPh}"/> 
+								 	<form:input path="pseudo" type="text" placeholder="${pseudoPh}" tabindex="1"/> 
 										<form:errors path="pseudo" cssClass="error"></form:errors>
 									 </div>
 									<div class="small-3 columns">
@@ -31,7 +31,7 @@
 	 								<spring:message code="password.ph" var="passwordPh"/>
 									<label><spring:message code="password.lbl"/></label>
 									<div class="small-9 columns">
-								 	<form:input path="password" type="password" placeholder="${passwordPh}"/>
+								 	<form:input path="password" type="password" placeholder="${passwordPh}" tabindex="2"/>
 										<form:errors path="password" cssClass="error"></form:errors>
 									</div>
 									<div class="small-3 columns">
