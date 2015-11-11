@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,14 +17,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ca.uqar.forum.entities.Membre;
 import ca.uqar.forum.entities.Message;
+import ca.uqar.forum.entities.Sujet;
 import ca.uqar.forum.services.IMessageService;
+import ca.uqar.forum.services.ISujetService;
 
 @Controller
-@RequestMapping(value="/administration-messages")
-public class AdministrationMessageController
+@RequestMapping(value="/administration-sujets")
+public class AdministrationSujetController
 {	
+	/* Debug */
+	private final static Logger logger = LoggerFactory.getLogger(AdministrationSujetController.class);
+	
 	@Resource
-	private IMessageService	messageService;
+	private ISujetService	sujetService;
 	/*
 	###############################
 	#                             #
@@ -40,10 +47,10 @@ public class AdministrationMessageController
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
-		List<Message> liste = messageService.findByAll();
+		List<Sujet> liste = sujetService.findAll();
 		
-		model.addAttribute("messageList", liste);
-		return "administrationMessage";
+		model.addAttribute("sujetList", liste);
+		return "administrationSujet";
 	}
 	/*
 	###############################
@@ -53,20 +60,18 @@ public class AdministrationMessageController
 	###############################
 	*/
 	/*
-	|------------------------------|
-	| POST When you delete message |    
-	|------------------------------|
+	|---------------------------------|
+	|  POST When you delete Subject   |    
+	|---------------------------------|
 	*/
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.POST)
-	public String deleteMessage(@PathVariable("id") String idMessage, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
-	{				
-		/* Define writter */
-		Membre createur = (Membre) session.getAttribute("membreSession");
-		if (createur == null){
-			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
-			return ("redirect:/connexion");
-		}		
-		messageService.deleteMessage(idMessage);
-		return "redirect:/administration-messages";
-	}
+	 @RequestMapping(value = "suppression/{id}", method = RequestMethod.POST)
+		public String supprSujet(ModelMap model, HttpSession session,final RedirectAttributes redirectAttributes,
+				@PathVariable("id") String idSujetToDelete, HttpServletRequest request)
+		{
+			Sujet sujet = sujetService.findById(Long.parseLong(idSujetToDelete));
+		 	sujetService.delSujet(sujet);
+		 	redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","Le sujet "+sujet.getTitle()+" a bien été supprimé.");
+			return ("redirect:/administration-sujets");
+		}
+
 }

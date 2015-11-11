@@ -14,7 +14,43 @@
 	<div class="row">
 		<div class="large-12 text-center columns">
 		<!-- /${idSujetParent} -->
-			<form:form method="POST" modelAttribute="addFilDiscussion" action="/Forum-Bovier-Versmee/sujet/add/${idSujetParent}" >
+		<a href="#" data-reveal-id="myModal" class="button small right">Créer un nouveau fil de discussion</a>
+
+		<div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+		  <h2 id="modalTitle" class="text-center">Création d'un nouveau fil de discussion</h2><br/>
+
+			<form:form method="POST" modelAttribute="addFilDiscussionAndMessage" action="/Forum-Bovier-Versmee/sujet/add/${idSujetParent}" >
+			<div class="row">
+			  <div class="large-6 large-centered columns">
+			    <div class="row collapse">
+			      <div class="large-12 columns">
+			      <label>Nom du fil de discussion
+					<spring:message code="discussion.ph" var="discussionPh"/>
+					<form:input path="title" type="text" placeholder="${discussionPh}"/>
+					<form:errors path="title" cssClass="error"/>
+					</label>
+			      </div>
+			      <div class="large-12 columns">
+			      	<label>Votre premier message
+					<spring:message code="enter.message.ph" var="messagePh"/>
+					<form:input path="contenue" type="text" placeholder="${messagePh}"/>
+					<form:errors path="contenue" cssClass="error"/>
+					</label>
+			      </div>
+			      <form:hidden path="idSujet" value="${idSujetParent}"/>
+			      <div class="large-12 columns">
+				      <button class="button postfix" data-tooltip aria-haspopup="true" title="<spring:message code="validate" />" >
+						<spring:message code="validate"/>
+					</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			</form:form>
+
+		  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+		</div>
+			<%-- <form:form method="POST" modelAttribute="addFilDiscussion" action="/Forum-Bovier-Versmee/sujet/add/${idSujetParent}" >
 			<div class="row">
 			  <div class="large-6 large-centered columns">
 			    <div class="row collapse">
@@ -31,7 +67,7 @@
 			    </div>
 			  </div>
 			</div>
-			</form:form>
+			</form:form> --%>
 		</div>
 	</div><br/><br/>
 	<!-- 

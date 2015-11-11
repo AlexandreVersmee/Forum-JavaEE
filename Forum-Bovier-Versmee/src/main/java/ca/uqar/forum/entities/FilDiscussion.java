@@ -39,9 +39,7 @@ public class FilDiscussion {
 	
 	@Column(name = "titre", nullable = false, unique = true)
 	private String	title;
-	
-//	cascade="all,delete-orphan
-	
+		
 	@Column(name = "date_creation", nullable = false)
 	private Date	dateCreation;
 	

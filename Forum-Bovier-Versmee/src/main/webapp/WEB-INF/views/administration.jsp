@@ -37,7 +37,7 @@
 			</a>
 		</div>
 		<div class="large-3 columns end">
-			<a href="/Forum-Bovier-Versmee/administration-sujet">
+			<a href="/Forum-Bovier-Versmee/administration-sujets">
 				<span class="fa-stack fa-lg fa-4x orange ">
 				  <i class="fa fa-square-o fa-stack-2x"></i>
 				  <i class="fa fa-list fa-stack-1x"></i>

@@ -15,7 +15,7 @@
 					<div class="large-12 columns answer child-answer">
 						<div class="row">
 							<div class="large-10 columns">
-								<c:out value="${item.texte}"/>
+								<span class="orange">Message de <c:out value="${item.membre.pseudo}"/> # </span> <c:out value="${item.texte}"/>
 							</div>
 							<div class="large-2  columns">
 								<ul class="button-group right">
@@ -73,7 +73,7 @@
 			<c:otherwise>
 				<div class="row">
 					<div class="large-10 columns main-answer">
-						<c:out value="${item.texte}"/>
+						<span class="orange">Message de <c:out value="${item.membre.pseudo}"/> # </span> <c:out value="${item.texte}"/>
 					</div>
 					<div class="large-2 columns">
 						<ul class="button-group right">

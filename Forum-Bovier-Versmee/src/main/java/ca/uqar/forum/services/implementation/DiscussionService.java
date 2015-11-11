@@ -14,8 +14,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.uqar.forum.dao.DiscussionDAO;
+import ca.uqar.forum.dao.MessageDAO;
 import ca.uqar.forum.entities.FilDiscussion;
+import ca.uqar.forum.entities.Membre;
+import ca.uqar.forum.entities.Message;
+import ca.uqar.forum.entities.Sujet;
 import ca.uqar.forum.services.IDiscussionService;
+import ca.uqar.forum.services.ISujetService;
+import ca.uqar.forum.forms.addFildDicussionAndMessage;
 
 @Service
 @Transactional
@@ -27,6 +33,12 @@ public class DiscussionService  implements IDiscussionService
 	@Resource
 	private DiscussionDAO discussionDAO;
 	
+	@Resource
+	private MessageDAO messageDAO;
+	
+	@Resource
+	ISujetService				sujetService;
+	
 	@PersistenceContext
 	private EntityManager entityManager;
 	
@@ -36,6 +48,38 @@ public class DiscussionService  implements IDiscussionService
 		
 		FilDiscussion discussion = discussionDAO.findById(idDiscussion);
 		return (discussion);
+	}
+	
+	public void saveDiscussionAndMessage(addFildDicussionAndMessage form, Membre createur)
+	{
+		FilDiscussion discussionToAdd 	= new FilDiscussion();
+		Message messageTodadd 			= new Message();
+		Date today 						= new Date();
+
+		/* Set informations of new Discussion */
+		discussionToAdd.setMembre(createur);
+		/* Seek subject parent of discussion*/
+		Sujet subjectParent =  sujetService.findById(Long.parseLong(form.getIdSujet()));
+		discussionToAdd.setSujet(subjectParent);
+		discussionToAdd.setDateCreation(today);
+		discussionToAdd.setDateDerniereModification(today);
+		discussionToAdd.setTitle(form.getTitle());
+		
+		/* Set informations of new Message */
+		messageTodadd.setMembre(createur);
+		messageTodadd.setDateCreation(today);
+		messageTodadd.setDateDerniereModification(today);
+		messageTodadd.setTexte(form.getContenue());
+		
+		FilDiscussion newItem = discussionDAO.save(discussionToAdd);
+		
+		/* Get discussion object */
+		FilDiscussion fil = discussionDAO.findById(newItem.getId());
+		
+		messageTodadd.setFildiscussion(fil);
+		messageTodadd.setParentId(newItem.getId());
+		
+		messageDAO.save(messageTodadd);
 	}
 	
 	public void saveDiscussion(FilDiscussion newDiscussion)
