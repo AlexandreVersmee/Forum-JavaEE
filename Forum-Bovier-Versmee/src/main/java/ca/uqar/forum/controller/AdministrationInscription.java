@@ -21,7 +21,8 @@ import ca.uqar.forum.services.IMembreService;
 
 @Controller
 @RequestMapping(value="/administration-inscriptions")
-public class AdministrationInscription {
+public class AdministrationInscription
+{
 	/* Debug */
 	private final static Logger logger = LoggerFactory.getLogger(AdministrationInscription.class);
 
@@ -43,7 +44,7 @@ public class AdministrationInscription {
 	###############################
 	*/
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	public String displayMembers(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		List<Membre> liste = membreService.findByValideIsNull();
 		

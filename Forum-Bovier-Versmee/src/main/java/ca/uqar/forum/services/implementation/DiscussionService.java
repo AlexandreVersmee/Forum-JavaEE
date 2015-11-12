@@ -20,6 +20,7 @@ import ca.uqar.forum.entities.Membre;
 import ca.uqar.forum.entities.Message;
 import ca.uqar.forum.entities.Sujet;
 import ca.uqar.forum.services.IDiscussionService;
+import ca.uqar.forum.services.IMessageService;
 import ca.uqar.forum.services.ISujetService;
 import ca.uqar.forum.forms.addFildDicussionAndMessage;
 
@@ -31,16 +32,18 @@ public class DiscussionService  implements IDiscussionService
 	private final static Logger logger = LoggerFactory.getLogger(DiscussionService.class);
 
 	@Resource
-	private DiscussionDAO discussionDAO;
+	private DiscussionDAO		discussionDAO;
 	
 	@Resource
-	private MessageDAO messageDAO;
+	private MessageDAO			messageDAO;
 	
 	@Resource
 	ISujetService				sujetService;
+	@Resource
+	IMessageService				messageService;
 	
 	@PersistenceContext
-	private EntityManager entityManager;
+	private EntityManager 		entityManager;
 	
 	public FilDiscussion findById(Long idDiscussion)
 	{
@@ -77,9 +80,9 @@ public class DiscussionService  implements IDiscussionService
 		FilDiscussion fil = discussionDAO.findById(newItem.getId());
 		
 		messageTodadd.setFildiscussion(fil);
-		messageTodadd.setParentId(newItem.getId());
 		
 		messageDAO.save(messageTodadd);
+		messageService.updateParentId();
 	}
 	
 	public void saveDiscussion(FilDiscussion newDiscussion)
@@ -92,7 +95,6 @@ public class DiscussionService  implements IDiscussionService
 		logger.debug("Save de la discussion : ["+newDiscussion.toString()+"]");
 		discussionDAO.save(newDiscussion);
 	}
-	
 	/*
 	###############################
 	#                             #

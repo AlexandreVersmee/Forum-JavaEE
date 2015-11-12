@@ -38,7 +38,7 @@ public class AdministrationMessageController
 	###############################
 	*/
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	public String displayMessageAdministration(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		List<Message> liste = messageService.findByAll();
 		
@@ -60,7 +60,7 @@ public class AdministrationMessageController
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.POST)
 	public String deleteMessage(@PathVariable("id") String idMessage, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{				
-		/* Define writter */
+		/* Define writer */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");

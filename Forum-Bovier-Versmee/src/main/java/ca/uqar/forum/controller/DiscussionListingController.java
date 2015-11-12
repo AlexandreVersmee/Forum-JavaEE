@@ -6,8 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,10 +24,7 @@ import ca.uqar.forum.services.ISujetService;
 @Controller
 @RequestMapping(value="/sujet")
 public class DiscussionListingController
-{
-	/* Debug */
-	private final static Logger logger = LoggerFactory.getLogger(DiscussionListingController.class);
-	
+{	
 	@Resource
 	IDiscussionService			discussuionService;
 	
@@ -59,7 +55,6 @@ public class DiscussionListingController
 	{
 		List<FilDiscussion> listeFil = discussuionService.readBySujet(Long.parseLong(idSubject));
 		
-//		model.addAttribute("addFilDiscussion", new FilDiscussion());
 		model.addAttribute("addFilDiscussionAndMessage", new addFildDicussionAndMessage());
 		model.addAttribute("listeFilDiscussion", listeFil);
 		model.addAttribute("idSujetParent", idSubject);
@@ -81,6 +76,12 @@ public class DiscussionListingController
 	public String addNewDiscussion(@Valid @ModelAttribute(value = "addFilDiscussionAndMessage") addFildDicussionAndMessage form,
 			@PathVariable("id") String idSubject, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
+		if (form.getTitle().isEmpty() || form.getContenue().isEmpty())
+    	{
+    		redirectAttributes.addFlashAttribute("ERROR_MESSAGE","Ces champs ne peuvent pas être vides.");
+    		return "redirect:/sujet/"+idSubject;
+    	}
+		
 		/* Set writer */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		if (createur == null){
@@ -88,38 +89,14 @@ public class DiscussionListingController
 			return ("redirect:/connexion");
 		}		
 		
-		discussuionService.saveDiscussionAndMessage(form, createur);
+		
+		/* Save discussion in database */
+		try {
+			discussuionService.saveDiscussionAndMessage(form, createur);
+		} catch (DataIntegrityViolationException e) {
+			model.addAttribute("ERROR_MESSAGE","Un sujet possède déjà ce nom !");
+		}
+		
 		return "redirect:/sujet/"+idSubject;
 	}
-
-//	@RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
-//	public String addNewDiscussion(@Valid @ModelAttribute(value = "addFilDiscussion") FilDiscussion form,
-//			@PathVariable("id") String idSubject, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
-//	{
-//		FilDiscussion discussionToAdd = new FilDiscussion();
-//		discussionToAdd.setTitle(form.getTitle());
-//		
-//		/* Set writer */
-//		Membre createur = (Membre) session.getAttribute("membreSession");
-//		if (createur == null){
-//			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
-//			return ("redirect:/connexion");
-//		}else{
-//			discussionToAdd.setMembre(createur);
-//		}
-//		
-//		/* Seek subject parent of discussion*/
-//		Sujet subjectParent =  sujetService.findById(Long.parseLong(idSubject));
-//		discussionToAdd.setSujet(subjectParent);
-//		
-//		logger.debug("NewFil = "+discussionToAdd.toString());
-//		/* Save subject in database */
-//		try {
-//			discussuionService.saveDiscussion(discussionToAdd);
-//		} catch (DataIntegrityViolationException e) {
-//			model.addAttribute("ERROR_MESSAGE","Une discussion possède déjà ce nom !");
-//		}
-//		return "redirect:/sujet/"+idSubject;
-//	}
-
 }

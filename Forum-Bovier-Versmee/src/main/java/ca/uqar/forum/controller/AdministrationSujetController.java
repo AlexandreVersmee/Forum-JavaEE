@@ -6,8 +6,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,19 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import ca.uqar.forum.entities.Membre;
-import ca.uqar.forum.entities.Message;
 import ca.uqar.forum.entities.Sujet;
-import ca.uqar.forum.services.IMessageService;
 import ca.uqar.forum.services.ISujetService;
 
 @Controller
 @RequestMapping(value="/administration-sujets")
 public class AdministrationSujetController
 {	
-	/* Debug */
-	private final static Logger logger = LoggerFactory.getLogger(AdministrationSujetController.class);
-	
 	@Resource
 	private ISujetService	sujetService;
 	/*
@@ -45,7 +37,7 @@ public class AdministrationSujetController
 	###############################
 	*/
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	public String displaySubjectAdministration(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		List<Sujet> liste = sujetService.findAll();
 		

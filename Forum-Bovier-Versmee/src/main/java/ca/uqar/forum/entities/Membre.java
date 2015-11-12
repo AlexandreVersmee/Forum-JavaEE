@@ -14,7 +14,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="membre")
-public class Membre {
+public class Membre
+{
 	/*
 	###############################
 	#                             #

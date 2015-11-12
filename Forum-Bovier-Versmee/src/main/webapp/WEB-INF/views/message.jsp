@@ -15,7 +15,15 @@
 					<div class="large-12 columns answer child-answer">
 						<div class="row">
 							<div class="large-10 columns">
-								<span class="orange">Message de <c:out value="${item.membre.pseudo}"/> # </span> <c:out value="${item.texte}"/>
+							<c:choose>
+								<c:when test="${item.membre.deleted != NULL}">
+									<span class="orange"><i class="fa fa-user"></i> Message de  Utilisateur supprimé</span> <b>-</b>
+								</c:when>
+								<c:otherwise>
+									<span class="orange"><i class="fa fa-user"></i> Message de <c:out value="${item.membre.pseudo}"/></span> <b>-</b>
+								</c:otherwise>
+							</c:choose>
+									<c:out value="${item.texte}"/>
 							</div>
 							<div class="large-2  columns">
 								<ul class="button-group right">
@@ -73,7 +81,15 @@
 			<c:otherwise>
 				<div class="row">
 					<div class="large-10 columns main-answer">
-						<span class="orange">Message de <c:out value="${item.membre.pseudo}"/> # </span> <c:out value="${item.texte}"/>
+							<c:choose>
+								<c:when test="${item.membre.deleted != NULL}">
+									<span class="orange"><i class="fa fa-user"></i> Message de  Utilisateur supprimé</span> <b>-</b>
+								</c:when>
+								<c:otherwise>
+									<span class="orange"><i class="fa fa-user"></i> Message de <c:out value="${item.membre.pseudo}"/></span> <b>-</b>
+								</c:otherwise>
+							</c:choose>
+							 <c:out value="${item.texte}"/>
 					</div>
 					<div class="large-2 columns">
 						<ul class="button-group right">

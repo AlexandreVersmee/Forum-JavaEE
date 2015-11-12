@@ -23,7 +23,8 @@ import ca.uqar.forum.services.IMembreService;
 
 @Controller
 @RequestMapping(value="/inscription")
-public class InscriptionController {
+public class InscriptionController
+{
 	/* Debug */
 	private final static Logger logger = LoggerFactory.getLogger(ConnexionController.class);
 	

@@ -9,14 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="sujet")
-public class Sujet {
+public class Sujet
+{
 	/*
 	###############################
 	#                             #
@@ -107,4 +107,16 @@ public class Sujet {
 	#                             #
 	###############################
 	*/	
+	@Override
+	public String toString()
+	{
+		String message;
+		
+		message="id : '"+this.getId()+ 
+				"' Date création : '"+this.getDateCreation()+
+				"' date dernière modification : '"+this.getDateDerniereModification()+
+				"' menbre id createur : "+this.getMembre().getId()+
+				"' Title : "+this.getTitle();
+		return (message);
+	}
 }

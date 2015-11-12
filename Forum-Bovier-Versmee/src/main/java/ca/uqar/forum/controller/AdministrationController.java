@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value="/administration")
-public class AdministrationController {
+public class AdministrationController
+{
 	/*
 	###############################
 	#                             #
@@ -26,7 +27,7 @@ public class AdministrationController {
 	###############################
 	*/
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	public String homeAdministration(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		return "administration";
 	}

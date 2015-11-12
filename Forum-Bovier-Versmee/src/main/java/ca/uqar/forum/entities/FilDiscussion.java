@@ -18,7 +18,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="fildiscussion")
-public class FilDiscussion {
+public class FilDiscussion 
+{
 	/*
 	###############################
 	#                             #

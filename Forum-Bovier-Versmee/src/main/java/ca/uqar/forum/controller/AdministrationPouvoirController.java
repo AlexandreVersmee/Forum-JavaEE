@@ -20,7 +20,8 @@ import ca.uqar.forum.services.IMembreService;
 
 @Controller
 @RequestMapping(value="/administration-pouvoirs")
-public class AdministrationPouvoirController {
+public class AdministrationPouvoirController
+{
 	/* Debug */
 	private final static Logger logger = LoggerFactory.getLogger(AdministrationInscription.class);
 
@@ -41,7 +42,7 @@ public class AdministrationPouvoirController {
 	###############################
 	*/
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	public String displayPowerAdministration(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		List<Membre> liste = membreService.findByValideIsNotNullAndDeleted(null);
 		

@@ -22,8 +22,8 @@ import ca.uqar.forum.services.ISujetService;
 
 @Controller
 @RequestMapping(value="/sujets")
-public class SujetListingController {
-	
+public class SujetListingController
+{	
 	@Resource
 	ISujetService			sujetService;
 	
@@ -42,7 +42,7 @@ public class SujetListingController {
 	###############################
 	*/
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	public String displaySubjectList(ModelMap model, HttpSession session, HttpServletRequest request)
 	{
 		List<Sujet> sujetListe	= sujetService.findAll();
 		
@@ -66,7 +66,7 @@ public class SujetListingController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String updateRowByPage(@Valid @ModelAttribute(value = "addSubject") Sujet subjectToAdd, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
-		/* Define writter */
+		/* Define writer */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
@@ -75,7 +75,7 @@ public class SujetListingController {
 			subjectToAdd.setMembre(createur);
 		}		
 		
-		/* Save sujet in database */
+		/* Save subject in database */
 		try {
 			sujetService.saveSujet(subjectToAdd);
 		} catch (DataIntegrityViolationException e) {

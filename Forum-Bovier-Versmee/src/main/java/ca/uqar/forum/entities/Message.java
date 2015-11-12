@@ -16,7 +16,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="message")
-public class Message {	
+public class Message
+{	
 	/*
 	###############################
 	#                             #

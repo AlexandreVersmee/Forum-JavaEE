@@ -143,16 +143,5 @@ public class MessageService implements IMessageService
 			messageListe.get(i).setParentId(messageListe.get(i).getId());
 			messageDAO.save(messageListe.get(i));
 		}
-		
-//	createQuery("UPDATE Message SET parentId = id WHERE parentId IS NULL").executeUpdate();
-		
-		
-		//		EntityManagerFactory emf=Persistence.createEntityManagerFactory();
-//		EntityManager em=emf.createEntityManager();
-//		EntityTransaction entr = em.getTransaction();
-//		entr.begin();
-//		logger.debug("Appel de la méthode updateParentId");
-//		em.createQuery("UPDATE Message SET parentId = id WHERE parentId IS NULL").executeUpdate();
-//		entr.commit();
 	}
 }

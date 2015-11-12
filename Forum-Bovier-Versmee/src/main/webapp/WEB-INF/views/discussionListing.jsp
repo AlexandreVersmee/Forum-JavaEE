@@ -50,24 +50,6 @@
 
 		  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
 		</div>
-			<%-- <form:form method="POST" modelAttribute="addFilDiscussion" action="/Forum-Bovier-Versmee/sujet/add/${idSujetParent}" >
-			<div class="row">
-			  <div class="large-6 large-centered columns">
-			    <div class="row collapse">
-			      <div class="small-11 columns">
-					<spring:message code="discussion.ph" var="discussionPh"/>
-					<form:input path="title" type="text" placeholder="${discussionPh}"/>
-					<form:errors path="title" cssClass="error"/>
-			      </div>
-			      <div class="small-1 columns">
-				      <button class="button postfix" data-tooltip aria-haspopup="true" title="<spring:message code="validate" />" >
-						<i class="fa fa-plus"></i>
-					</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			</form:form> --%>
 		</div>
 	</div><br/><br/>
 	<!-- 

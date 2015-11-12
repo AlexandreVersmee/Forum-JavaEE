@@ -11,7 +11,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/deconnexion") 
-public class DeconnexionController {
+public class DeconnexionController
+{
 	/* Debug */
 	private final static Logger logger = LoggerFactory.getLogger(DeconnexionController.class);
 		

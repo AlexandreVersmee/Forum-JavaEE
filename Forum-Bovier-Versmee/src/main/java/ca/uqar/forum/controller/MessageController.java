@@ -112,7 +112,7 @@ public class MessageController
 		answer.setTexte(answerToAdd.getTexte());
 		
 		logger.debug("Message = "+answer.getId());
-		/* Define writter */
+		/* Define writer */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
@@ -132,7 +132,7 @@ public class MessageController
 		Message messageToAdd = new Message();
 		messageToAdd.setTexte(form.getTexte());
 		
-		/* Define writter */
+		/* Define writer */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
@@ -152,7 +152,7 @@ public class MessageController
 			@PathVariable("discussionId") String idDiscussion,
 			@Valid @ModelAttribute(value = "answerMessage") Message answerToAdd, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{
-		/* Define writter */
+		/* Define writer */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
@@ -173,7 +173,7 @@ public class MessageController
 	@RequestMapping(value = "{discussionId}/delete/{id}", method = RequestMethod.POST)
 	public String deleteMessage(@PathVariable("id") String idParent, @PathVariable("discussionId") String idDiscussion, ModelMap model, HttpSession session, final RedirectAttributes redirectAttributes)
 	{			
-		/* Define writter */
+		/* Define writer */
 		Membre createur = (Membre) session.getAttribute("membreSession");
 		if (createur == null){
 			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");

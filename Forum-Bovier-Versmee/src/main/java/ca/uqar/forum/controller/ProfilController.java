@@ -20,7 +20,8 @@ import ca.uqar.forum.services.IMembreService;
 
 @Controller
 @RequestMapping(value="/profil")
-public class ProfilController {
+public class ProfilController
+{
 	/* Debug */
 	private final static Logger logger = LoggerFactory.getLogger(ConnexionController.class);
 	
@@ -41,9 +42,14 @@ public class ProfilController {
 	###############################
 	*/
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model, HttpSession session, HttpServletRequest request)
+	public String displayProfil(ModelMap model, HttpSession session, HttpServletRequest request,final RedirectAttributes redirectAttributes)
 	{
-		model.addAttribute("modifMembre", session.getAttribute("membreSession"));
+		Membre createur = (Membre) session.getAttribute("membreSession");
+		if (createur == null){
+			redirectAttributes.addFlashAttribute("INFORMATION_MESSAGE","Vous devez être connecté pour effectuer cette action.");
+			return ("redirect:/connexion");
+		}
+		model.addAttribute("modifMembre", createur);
 		return "profil";
 	}
 	/*
@@ -59,8 +65,11 @@ public class ProfilController {
 		/* General var needed by view */
 		
 		Membre courrant = (Membre) session.getAttribute("membreSession");
+		
 		membre.setPseudo(courrant.getPseudo());
 		membre.setId(courrant.getId());
+		membre.setPouvoir(courrant.getPouvoir());
+		membre.setValide(courrant.getValide());
 		logger.debug("Value in form = [{}]",membre.toString());
 		
 		if (result.hasErrors()) {
@@ -69,11 +78,13 @@ public class ProfilController {
 			return ("profil");
 		}
 
-		/* Sauvgarde la modification du profil en BDD */
-			membreService.saveMembre(membre);
+		/* Sauvegarde la modification du profil en BDD */
+		membreService.saveMembre(membre);
+		session.removeAttribute("membreSession");
+		session.setAttribute("membreSession", membre);
 		
 		redirectAttributes.addFlashAttribute("SUCCESS_MESSAGE","La modification a bien ete effectuer.");
-		return ("redirect:/");
+		return ("redirect:/profil");
 	}
 	
 	@RequestMapping(value = "/suppr", method = RequestMethod.POST)
